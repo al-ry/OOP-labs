@@ -34,10 +34,9 @@ bool ParseArguments(int argc, char* argv[], string &arg)
 }
 bool CheckIsNumber(const string& arg)
 {
-	int tmp;
 	try
 	{
-		tmp = stoi(arg);
+		stoi(arg);
 	}
 	catch (invalid_argument)
 	{
