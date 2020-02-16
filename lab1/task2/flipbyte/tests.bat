@@ -9,21 +9,29 @@ echo Test 1 passed
 
 rem Передаем несколько аргументов
 
-%PROGRAM% 20 20
+%PROGRAM% 20 20 > %TEMP%\out.txt
 if NOT ERRORLEVEL 1 goto err
+fc %TEMP%\out.txt tests\more_arguments.txt
+if ERRORLEVEL 1 goto err
 echo Test 2 passed
 
 rem Передаем буквы, а не число
-%PROGRAM% cat
+%PROGRAM% cat > %TEMP%\out.txt
 if NOT ERRORLEVEL 1 goto err
+fc %TEMP%\out.txt tests\letters_argument.txt
+if ERRORLEVEL 1 goto err
 echo Test 3 passed
 
-%PROGRAM% 23abc
+%PROGRAM% 23abc > %TEMP%\out.txt
 if NOT ERRORLEVEL 1 goto err
+fc %TEMP%\out.txt tests\letters_argument.txt
+if ERRORLEVEL 1 goto err
 echo Test 4 passed
 
-%PROGRAM% -23abc
+%PROGRAM% -23abc > %TEMP%\out.txt
 if NOT ERRORLEVEL 1 goto err
+fc %TEMP%\out.txt tests\letters_argument.txt
+if ERRORLEVEL 1 goto err
 echo Test 5 passed
 
 rem Граничное значение

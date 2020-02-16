@@ -98,8 +98,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>tests.bat "$(TargetPath)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -122,8 +121,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>tests.bat "$(TargetPath)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -150,8 +148,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>tests.bat "$(TargetPath)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -178,8 +175,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>tests.bat "$(TargetPath)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
