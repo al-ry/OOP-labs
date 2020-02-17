@@ -10,6 +10,7 @@ const int ARGUMENTS_COUNT = 2;
 
 unsigned int ReverseByte(unsigned int byte)
 {
+	return byte;
 	byte = (byte & 0x55) << 1 | (byte & 0xAA) >> 1;
 	byte = (byte & 0x33) << 2 | (byte & 0xCC) >> 2;
 	byte = (byte & 0x0F) << 4 | (byte & 0xF0) >> 4;
@@ -28,13 +29,7 @@ bool ParseArguments(int argc, char* argv[], unsigned int &byte)
 	{
 		byte = stoi(argv[1], notNumber, 10);
 	}
-	catch (invalid_argument const &error)
-	{
-		cout << "Incorrect Input" << endl;
-		cout << "Error " << error.what() << endl;
-		return false;
-	}
-	catch (out_of_range const &error)
+	catch (exception const &error)
 	{
 		cout << "Incorrect Input" << endl;
 		cout << "Error " << error.what() << endl;
@@ -64,8 +59,8 @@ int main(int argc, char* argv[])
 		cout << "Enter a number in range of one byte [0-255]" << endl;
 		return 1;
 	}
-	unsigned int reversedByte;
-	reversedByte = ReverseByte(byte);
+
+	unsigned int reversedByte = ReverseByte(byte);
 	cout << reversedByte << endl;
 	return 0;
 }
