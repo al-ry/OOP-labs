@@ -8,19 +8,14 @@ const int MAX_VALUE_OF_ONE_BYTE = 255;
 const int ARGUMENTS_COUNT = 2;
 
 
-unsigned int ReverseByte(unsigned int decimalNumber)
+unsigned int ReverseByte(unsigned int byte)
 {
-	char byte[LENGHT_OF_BYTE] = "";
-	int resultOfShifting;
-	for (int i = 0; i < LENGHT_OF_BYTE; i++)
-	{
-		resultOfShifting = decimalNumber >> i & 1;
-		byte[i] = resultOfShifting + '0';
-	}
-	decimalNumber = stoi(byte, 0, 2);
-	return decimalNumber;
+	byte = (byte & 0x55) << 1 | (byte & 0xAA) >> 1;
+	byte = (byte & 0x33) << 2 | (byte & 0xCC) >> 2;
+	byte = (byte & 0x0F) << 4 | (byte & 0xF0) >> 4;
+	return byte;
 }
-bool ParseArguments(int argc, char* argv[], string &arg)
+bool ParseArguments(int argc, char* argv[], unsigned int &byte)
 {
 	if (argc != ARGUMENTS_COUNT)
 	{
@@ -28,72 +23,49 @@ bool ParseArguments(int argc, char* argv[], string &arg)
 		cout << "Usage: flipbyte.exe <Decimal number>" << endl;
 		return false;
 	}
-	arg = argv[1];
-	return true;
-}
-bool CheckIsNumber(const string& arg)
-{
+	size_t *notNumber = new size_t;
 	try
 	{
-		stoi(arg);
+		byte = stoi(argv[1], notNumber, 10);
 	}
-	catch (invalid_argument)
+	catch (invalid_argument const &error)
 	{
 		cout << "Incorrect Input" << endl;
-		cout << "Enter a decimal number" << endl;
+		cout << "Error " << error.what() << endl;
 		return false;
 	}
-	catch (out_of_range)
+	catch (out_of_range const &error)
 	{
 		cout << "Incorrect Input" << endl;
-		cout << "Out of range" << endl;
+		cout << "Error " << error.what() << endl;
 		return false;
 	}
-	for (size_t i = 0; i < arg.length(); i++)
+
+	if (argv[1][*notNumber] != '\0')
 	{
-		if (arg[0] == '-' && i == 0)
-		{
-			continue;
-		}
-		if (!isdigit(arg[i])) 
-		{
-			cout << "Incorrect Input" << endl;
-			cout << "Enter a decimal number" << endl;
-			return false;
-		}
+		cout << "Incorrect Input" << endl;
+		cout << "Enter a number" << endl;
+		return false;
 	}
 	return true;
 }
+
 int main(int argc, char* argv[])
 {
-	string arg;
-	bool isParsed = ParseArguments(argc, argv, arg);
-
-	if (!isParsed)
+	unsigned int byte;
+	if (!ParseArguments(argc, argv, byte))
 	{
 		return 1;
 	}
 
-
-	unsigned int decimalNumber;
-	bool isNumber = CheckIsNumber(arg);
-
-
-	if (!isNumber)
-	{
-		return 1;
-	}
-	decimalNumber = stoi(arg);
-	
-
-	if (decimalNumber < 0 || decimalNumber > MAX_VALUE_OF_ONE_BYTE)
+	if (byte < 0 || byte > MAX_VALUE_OF_ONE_BYTE)
 	{
 		cout << "Incorrect Input" << endl;
 		cout << "Enter a number in range of one byte [0-255]" << endl;
 		return 1;
 	}
-
-	decimalNumber = ReverseByte(decimalNumber);
-	cout << decimalNumber << endl;
+	unsigned int reversedByte;
+	reversedByte = ReverseByte(byte);
+	cout << reversedByte << endl;
 	return 0;
 }
