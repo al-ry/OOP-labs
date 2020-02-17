@@ -10,7 +10,6 @@ const int ARGUMENTS_COUNT = 2;
 
 unsigned int ReverseByte(unsigned int byte)
 {
-	return byte;
 	byte = (byte & 0x55) << 1 | (byte & 0xAA) >> 1;
 	byte = (byte & 0x33) << 2 | (byte & 0xCC) >> 2;
 	byte = (byte & 0x0F) << 4 | (byte & 0xF0) >> 4;
