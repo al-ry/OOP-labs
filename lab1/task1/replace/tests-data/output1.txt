@@ -1,0 +1,2 @@
+Invalid arguments
+Argument <search string> mustn't be empty
