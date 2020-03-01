@@ -56,7 +56,7 @@ bool OpenFile(ifstream& file, const string& inputFileName)
 	return true;
 }
 
-double GetMinor(const Matrix matrix, int column, int row)
+double GetMinor(const Matrix& matrix, int column, int row)
 {
 	MinorMatrix matrixMinor;
 	for (int i = 0, m = 0; i < MATRIX_SIZE; i++)
@@ -77,7 +77,7 @@ double GetMinor(const Matrix matrix, int column, int row)
 	return matrixMinor[0][0] * matrixMinor[1][1] - matrixMinor[1][0] * matrixMinor[0][1];
 }
 
-double CalculateDeterminant(const Matrix matrix)
+double CalculateDeterminant(const Matrix &matrix)
 {
 	double resultDeterminant = 0;
 	int sign = 1;
@@ -101,7 +101,7 @@ void TransposeAndCalculateUnionMatrix(const Matrix& sourceMatrix, Matrix& transp
 		}
 	}
 }
-void CalculateFinalMatrixAndPrintResult(Matrix& intemidiateMatrix, const double determinant)
+void CalculateFinalMatrixAndPrintResult(Matrix intermidiateMatrix, const double determinant)
 {
 	cout.setf(ios::fixed);
 	double result;
@@ -109,7 +109,7 @@ void CalculateFinalMatrixAndPrintResult(Matrix& intemidiateMatrix, const double 
 	{
 		for (int j = 0; j < MATRIX_SIZE; j++)
 		{
-			result = intemidiateMatrix[i][j] / determinant;
+			result = intermidiateMatrix[i][j] / determinant;
 			if (result == -0.0f)
 			{
 				result = 0.0f;
@@ -130,9 +130,9 @@ bool InvertMatrix(Matrix& sourceMatrix)
 		return false;
 	}
 
-	Matrix intemidiateMatrix;
-	TransposeAndCalculateUnionMatrix(sourceMatrix, intemidiateMatrix);
-	CalculateFinalMatrixAndPrintResult(intemidiateMatrix, determinant);
+	Matrix intermidiateMatrix;
+	TransposeAndCalculateUnionMatrix(sourceMatrix, intermidiateMatrix);
+	CalculateFinalMatrixAndPrintResult(intermidiateMatrix, determinant);
 	return true;
 }
 

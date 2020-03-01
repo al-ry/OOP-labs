@@ -39,7 +39,7 @@ optional<Args> ParseArguments(int argc,char *argv[])
 	return args;
 }
 
-string ReplaceSubstring(const string line, const string searchStr, const string replaceStr)
+string ReplaceSubstring(const string &line, const string &searchStr, const string &replaceStr)
 {
 	size_t indexPosition = 0;
 	string result;
@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
 	}
 
 	if (!HandleStreamAndCopyFileWithReplace(args->inputFilename, args->outputFileName,
-											args->searchString, args->replaceString))
+		args->searchString, args->replaceString))
 	{
 		return 1;
 	}
