@@ -74,7 +74,7 @@ bool CopyFileWithReplace(istream& inputStream, ostream& outputStream,
 }
 
 
-bool HandleStreamAndCopyFileWithReplace(const string &inputStream, const string &outputStream,
+bool OpenFileAndCopyWithReplace(const string &inputStream, const string &outputStream,
 	const string &searchStr, const string &replaceStr)
 {
 	ifstream inputFile;
@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	if (!HandleStreamAndCopyFileWithReplace(args->inputFilename, args->outputFileName,
+	if (!OpenFileAndCopyWithReplace(args->inputFilename, args->outputFileName,
 		args->searchString, args->replaceString))
 	{
 		return 1;

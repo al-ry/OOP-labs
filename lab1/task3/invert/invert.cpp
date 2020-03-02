@@ -11,7 +11,7 @@ const int MINOR_MATRIX_SIZE = 2;
 
 struct Argument
 {
-	string inputFile;
+	string inputFileName;
 };
 typedef double Matrix[MATRIX_SIZE][MATRIX_SIZE];
 typedef double MinorMatrix[MINOR_MATRIX_SIZE][MINOR_MATRIX_SIZE];
@@ -24,24 +24,8 @@ optional<Argument> GetArgument(int argc, char* argv[])
 		cout << "Arguments should be: <input matrix>";
 		return nullopt;
 	}
-	arg.inputFile = argv[1];
+	arg.inputFileName = argv[1];
 	return arg;
-}
-
-bool GetMatrixFromFile(istream& inputStream, Matrix matrix)
-{
-	for (int i = 0; i < MATRIX_SIZE; i++)
-	{
-		for (int j = 0; j < MATRIX_SIZE; j++)
-		{
-			if (!(inputStream >> matrix[i][j]))
-			{
-				cout << "Cannot get matrix from file" << endl;
-				return false;
-			}
-		}
-	}
-	return true;
 }
 
 bool OpenFile(ifstream& file, const string& inputFileName)
@@ -52,6 +36,27 @@ bool OpenFile(ifstream& file, const string& inputFileName)
 	{
 		cout << "Failed to open " << inputFileName << " for reading" << endl;
 		return false;
+	}
+	return true;
+}
+
+bool GetMatrixFromFile(const string& inputFileName, Matrix& matrix)
+{
+	ifstream inputFile;
+	if (!OpenFile(inputFile, inputFileName))
+	{
+		return false;
+	}
+	for (int i = 0; i < MATRIX_SIZE; i++)
+	{
+		for (int j = 0; j < MATRIX_SIZE; j++)
+		{
+			if (!(inputFile >> matrix[i][j]))
+			{
+				cout << "Cannot get matrix from file" << endl;
+				return false;
+			}
+		}
 	}
 	return true;
 }
@@ -77,7 +82,7 @@ double GetMinor(const Matrix& matrix, int column, int row)
 	return matrixMinor[0][0] * matrixMinor[1][1] - matrixMinor[1][0] * matrixMinor[0][1];
 }
 
-double CalculateDeterminant(const Matrix &matrix)
+double CalculateDeterminant(const Matrix& matrix)
 {
 	double resultDeterminant = 0;
 	int sign = 1;
@@ -89,7 +94,7 @@ double CalculateDeterminant(const Matrix &matrix)
 	return resultDeterminant;
 }
 
-void TransposeAndCalculateUnionMatrix(const Matrix& sourceMatrix, Matrix& transposedMatrix)
+void CalculateTransposedAdjugateMatrix(const Matrix& sourceMatrix, Matrix& transposedMatrix)
 {
 	int sign = 1;
 	for (int i = 0; i < MATRIX_SIZE; i++)
@@ -101,7 +106,7 @@ void TransposeAndCalculateUnionMatrix(const Matrix& sourceMatrix, Matrix& transp
 		}
 	}
 }
-void CalculateFinalMatrixAndPrintResult(Matrix intermidiateMatrix, const double determinant)
+void CalculateInvertedMatrix(Matrix& intermidiateMatrix, const double determinant)
 {
 	cout.setf(ios::fixed);
 	double result;
@@ -109,18 +114,16 @@ void CalculateFinalMatrixAndPrintResult(Matrix intermidiateMatrix, const double 
 	{
 		for (int j = 0; j < MATRIX_SIZE; j++)
 		{
-			result = intermidiateMatrix[i][j] / determinant;
-			if (result == -0.0f)
+			intermidiateMatrix[i][j] = intermidiateMatrix[i][j] / determinant;
+			if (intermidiateMatrix[i][j] == -0.0f)
 			{
-				result = 0.0f;
+				intermidiateMatrix[i][j] = 0.0f;
 			}
-			cout << setprecision(3) << result << "\t";
 		}
-		cout << endl;
 	}
 }
 
-bool InvertMatrix(Matrix& sourceMatrix)
+bool InvertMatrix(const Matrix& sourceMatrix, Matrix& resultMatrix)
 {
 	double determinant;
 	determinant = CalculateDeterminant(sourceMatrix);
@@ -130,10 +133,21 @@ bool InvertMatrix(Matrix& sourceMatrix)
 		return false;
 	}
 
-	Matrix intermidiateMatrix;
-	TransposeAndCalculateUnionMatrix(sourceMatrix, intermidiateMatrix);
-	CalculateFinalMatrixAndPrintResult(intermidiateMatrix, determinant);
+	CalculateTransposedAdjugateMatrix(sourceMatrix, resultMatrix);
+	CalculateInvertedMatrix(resultMatrix, determinant);
 	return true;
+}
+
+void PrintMatrix(const Matrix &resultMatrix)
+{
+	for (int i = 0; i < MATRIX_SIZE; i++)
+	{
+		for (int j = 0; j < MATRIX_SIZE; j++)
+		{
+			cout << setprecision(3) << resultMatrix[i][j] << "\t";
+		}
+		cout << endl;
+	}
 }
 
 int main(int argc, char* argv[])
@@ -143,18 +157,15 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	ifstream inputFile;
-	if (!OpenFile(inputFile, arg->inputFile))
-	{
-		return 1;
-	}
 	Matrix matrix3x3;
-	if (!GetMatrixFromFile(inputFile, matrix3x3))
+	if (!GetMatrixFromFile(arg->inputFileName, matrix3x3))
 	{
 		return 1;
 	}
-	if (!InvertMatrix(matrix3x3))
+	Matrix resultMatrix;
+	if (!InvertMatrix(matrix3x3, resultMatrix))
 	{
 		return 1;
 	}
+	PrintMatrix(resultMatrix);
 }
