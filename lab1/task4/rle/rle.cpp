@@ -20,7 +20,8 @@ struct Args
 enum Mode
 {
 	PACKING_MODE,
-	UNPACKING_MODE
+	UNPACKING_MODE,
+	INCORRECT_MODE
 };
 optional<Args> ParseArguments(int argc, char* argv[])
 {
@@ -36,79 +37,6 @@ optional<Args> ParseArguments(int argc, char* argv[])
 	args.inputFileName = argv[2];
 	args.outputFileName = argv[3];
 	return args;
-}
-
-Mode defineMode(const string& firstArg)
-{
-	if (firstArg == "pack")
-	{
-		return PACKING_MODE;
-	}
-	if (firstArg == "unpack")
-	{
-		return UNPACKING_MODE;
-	}
-}
-bool IsEvenFileSize(ifstream& inputFile)
-{
-	streamoff fileSize = 0;
-	streamoff prevPosition;
-
-	prevPosition = inputFile.tellg();
-	inputFile.seekg(0, inputFile.end);
-	fileSize = inputFile.tellg();
-
-	if (fileSize % 2 != 0)
-	{
-		cout << "File size is not even. Cannot upack input file.";
-		return false;
-	}
-
-	inputFile.seekg(prevPosition);
-	return true;
-}
-void PackFile(istream& inputStream, ostream& outputStream)
-{
-	char ch, prevCh;
-	inputStream.read(&ch, sizeof(ch));
-	if (inputStream.eof())
-	{
-		return;
-	}
-	unsigned char byteCounter = 1;
-	prevCh = ch;
-	while (inputStream.read(&ch, sizeof(ch)))
-	{
-		if (prevCh == ch && byteCounter < MAX_PACK)
-		{
-			byteCounter++;
-		}
-		else
-		{
-			outputStream.put(byteCounter);
-			outputStream.put(prevCh);
-			byteCounter = 1;
-			prevCh = ch;
-		}
-	}
-	outputStream.put(byteCounter);
-	outputStream.put(prevCh);
-}
-void UnpackFile(istream& inputStream, ostream& outputStream)
-{
-	char data = 0;
-	unsigned char byteAmount = 0;
-	size_t repeatAmount = 0;
-	while (inputStream.read(&data, sizeof(char)))
-	{
-		byteAmount = data;
-		repeatAmount = byteAmount;
-		inputStream.read(&data, sizeof(char));
-		for (size_t i = 0; i < repeatAmount; i++)
-		{
-			outputStream.put(data);
-		}
-	}
 }
 bool OpenFiles(const string& inputFileName, const string& outputFileName,
 	ifstream& inputFile, ofstream& outputFile)
@@ -128,6 +56,117 @@ bool OpenFiles(const string& inputFileName, const string& outputFileName,
 	return true;
 }
 
+Mode defineMode(const string& firstArg)
+{
+	if (firstArg == "pack")
+	{
+		return PACKING_MODE;
+	}
+	if (firstArg == "unpack")
+	{
+		return UNPACKING_MODE;
+	}
+	cout << "Incorrect mode. Argument <mode>. Should be either <pack> or <unpack>.";
+	return INCORRECT_MODE;
+}
+bool IsEvenFileSize(ifstream& inputFile)
+{
+	streamoff fileSize = 0;
+	streamoff prevPosition;
+
+	prevPosition = inputFile.tellg();
+	inputFile.seekg(0, inputFile.end);
+	fileSize = inputFile.tellg();
+
+	if (fileSize % 2 != 0)
+	{
+		cout << "File size is not even. Cannot unpack input file.";
+		return false;
+	}
+
+	inputFile.seekg(prevPosition);
+	return true;
+}
+
+void WritePacket(ofstream& outputFile, uint8_t byteAmount, uint8_t byte)
+{
+	outputFile.put(byteAmount);
+	outputFile.put(byte);
+}
+
+void PackData(ifstream& inputFile, ofstream& outputFile)
+{
+	uint8_t byte = 0, prevByte = 0, byteCounter = 1;
+	char ch;
+	inputFile.read(&ch, sizeof(char));
+	if (inputFile.eof())
+	{
+		return;
+	}
+	byte = ch;
+	prevByte = byte;
+	while (inputFile.read(&ch, sizeof(char)))
+	{
+		byte = ch;
+		if (prevByte == byte && byteCounter < MAX_PACK)
+		{
+			byteCounter++;
+		}
+		else
+		{
+			WritePacket(outputFile, byteCounter, prevByte);
+			byteCounter = 1;
+			prevByte = byte;
+		}
+	}
+	WritePacket(outputFile, byteCounter, prevByte);
+}
+
+bool PackFile(const string& inputFileName, const string& outputFileName)
+{
+	ifstream inputFile;
+	ofstream outputFile;
+	if (!OpenFiles(inputFileName, outputFileName, inputFile, outputFile))
+	{
+		return false;
+	}
+	PackData(inputFile, outputFile);
+	return true;
+}
+
+void UnpackData(ifstream& inputFile, ofstream& outputFile)
+{
+	char data = 0;
+	uint8_t byteAmount = 0;
+	size_t repeatAmount = 0;
+	while (inputFile.read(&data, sizeof(char)))
+	{
+		byteAmount = data;
+		repeatAmount = byteAmount;
+		inputFile.read(&data, sizeof(char));
+		for (size_t i = 0; i < repeatAmount; i++)
+		{
+			outputFile.put(data);
+		}
+	}
+}
+
+bool UnpackFile(const string& inputFileName, const string& outputFileName)
+{
+	ifstream inputFile;
+	ofstream outputFile;
+	if (!OpenFiles(inputFileName, outputFileName, inputFile, outputFile))
+	{
+		return false;
+	}
+	if (!IsEvenFileSize(inputFile))
+	{
+		return false;
+	}
+	UnpackData(inputFile, outputFile);
+	return true;
+}
+
 int main(int argc, char* argv[])
 {
 	auto args = ParseArguments(argc, argv);
@@ -135,32 +174,23 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	ifstream inputFile;
-	ofstream outputFile;
 	Mode modeType = defineMode(args->mode);
 	if (modeType == PACKING_MODE)
 	{
-		if (!OpenFiles(args->inputFileName, args->outputFileName, inputFile, outputFile))
+		if (!PackFile(args->inputFileName, args->outputFileName))
 		{
 			return 1;
 		}
-		PackFile(inputFile, outputFile);
 	}
 	else if (modeType == UNPACKING_MODE)
 	{
-		if (!OpenFiles(args->inputFileName, args->outputFileName, inputFile, outputFile))
+		if (!UnpackFile(args->inputFileName, args->outputFileName))
 		{
 			return 1;
 		}
-		if (!IsEvenFileSize(inputFile))
-		{
-			return 1;
-		}
-		UnpackFile(inputFile, outputFile);
 	}
-	else
+	else if (modeType == INCORRECT_MODE)
 	{
-		cout << "Incorrect <mode>. Argument <mode> should be <pack> or <unpack>" << endl;
 		return 1;
 	}
 	return 0;
