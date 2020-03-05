@@ -62,7 +62,7 @@ string ReplaceSubstring(const string &line, const string &searchStr, const strin
 	return result;
 }
 
-bool CopyFileWithReplace(istream& inputStream, ostream& outputStream,
+bool CopyWithReplace(istream& inputStream, ostream& outputStream,
 	const string& searchStr, const string& replaceStr)
 {
 	string line;
@@ -74,7 +74,7 @@ bool CopyFileWithReplace(istream& inputStream, ostream& outputStream,
 }
 
 
-bool OpenFileAndCopyWithReplace(const string &inputStream, const string &outputStream,
+bool CopyFileWithReplace(const string& inputStream, const string& outputStream,
 	const string &searchStr, const string &replaceStr)
 {
 	ifstream inputFile;
@@ -98,7 +98,7 @@ bool OpenFileAndCopyWithReplace(const string &inputStream, const string &outputS
 	}
 
 	/// Замена в файле
-	if (!CopyFileWithReplace(inputFile, outputFile, searchStr, replaceStr))
+	if (!CopyWithReplace(inputFile, outputFile, searchStr, replaceStr))
 	{
 		return false;
 	}
@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	if (!OpenFileAndCopyWithReplace(args->inputFilename, args->outputFileName,
+	if (!CopyFileWithReplace(args->inputFilename, args->outputFileName,
 		args->searchString, args->replaceString))
 	{
 		return 1;

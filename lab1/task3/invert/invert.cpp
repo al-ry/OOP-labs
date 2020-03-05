@@ -28,25 +28,17 @@ optional<Argument> GetArgument(int argc, char* argv[])
 	return arg;
 }
 
-bool OpenFile(ifstream& file, const string& inputFileName)
-{
-	file.open(inputFileName);
-	//Проверка на открытие входного потока
-	if (!file.is_open())
-	{
-		cout << "Failed to open " << inputFileName << " for reading" << endl;
-		return false;
-	}
-	return true;
-}
 
 bool GetMatrixFromFile(const string& inputFileName, Matrix& matrix)
 {
 	ifstream inputFile;
-	if (!OpenFile(inputFile, inputFileName))
+	inputFile.open(inputFileName);
+	if (!inputFile.is_open())
 	{
+		cout << "Failed to open " << inputFileName << " for reading" << endl;
 		return false;
 	}
+
 	for (int i = 0; i < MATRIX_SIZE; i++)
 	{
 		for (int j = 0; j < MATRIX_SIZE; j++)
