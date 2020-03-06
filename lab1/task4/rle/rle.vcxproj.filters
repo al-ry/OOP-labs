@@ -24,4 +24,9 @@
       <Filter>Исходные файлы</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

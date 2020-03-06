@@ -1,10 +1,5 @@
-﻿// rle.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <fstream>
-#include <iostream>
-#include <optional>
-#include <string>
+﻿
+#include "stdafx.h"
 
 using namespace std;
 
@@ -38,22 +33,11 @@ optional<Args> ParseArguments(int argc, char* argv[])
 	args.outputFileName = argv[3];
 	return args;
 }
-bool OpenFiles(const string& inputFileName, const string& outputFileName,
-	ifstream& inputFile, ofstream& outputFile)
+
+void WritePacket(ofstream& outputFile, uint8_t byteAmount, uint8_t byte)
 {
-	inputFile.open(inputFileName, ios::binary);
-	if (!inputFile.is_open())
-	{
-		cout << "Failed to open " << inputFileName << " for reading" << endl;
-		return false;
-	}
-	outputFile.open(outputFileName, ios::binary);
-	if (!outputFile.is_open())
-	{
-		cout << "Failed to open " << outputFileName << " for writing" << endl;
-		return false;
-	}
-	return true;
+	outputFile.put(byteAmount);
+	outputFile.put(byte);
 }
 
 Mode defineMode(const string& firstArg)
@@ -88,12 +72,6 @@ bool IsEvenFileSize(ifstream& inputFile)
 	return true;
 }
 
-void WritePacket(ofstream& outputFile, uint8_t byteAmount, uint8_t byte)
-{
-	outputFile.put(byteAmount);
-	outputFile.put(byte);
-}
-
 void PackData(ifstream& inputFile, ofstream& outputFile)
 {
 	uint8_t byte = 0, prevByte = 0, byteCounter = 1;
@@ -126,11 +104,32 @@ bool PackFile(const string& inputFileName, const string& outputFileName)
 {
 	ifstream inputFile;
 	ofstream outputFile;
-	if (!OpenFiles(inputFileName, outputFileName, inputFile, outputFile))
+	inputFile.open(inputFileName, ios::binary);
+	if (!inputFile.is_open())
 	{
+		cout << "Failed to open " << inputFileName << " for reading" << endl;
 		return false;
 	}
+	outputFile.open(outputFileName, ios::binary);
+	if (!outputFile.is_open())
+	{
+		cout << "Failed to open " << outputFileName << " for writing" << endl;
+		return false;
+	}
+
 	PackData(inputFile, outputFile);
+
+	if (inputFile.bad())
+	{
+		cout << "Failed for reading data from input stream" << endl;
+		return false;
+	}
+
+	if (!outputFile.flush())
+	{
+		cout << "Failed for writing data in output stream" << endl;
+		return false;
+	}
 	return true;
 }
 
@@ -155,8 +154,16 @@ bool UnpackFile(const string& inputFileName, const string& outputFileName)
 {
 	ifstream inputFile;
 	ofstream outputFile;
-	if (!OpenFiles(inputFileName, outputFileName, inputFile, outputFile))
+	inputFile.open(inputFileName, ios::binary);
+	if (!inputFile.is_open())
 	{
+		cout << "Failed to open " << inputFileName << " for reading" << endl;
+		return false;
+	}
+	outputFile.open(outputFileName, ios::binary);
+	if (!outputFile.is_open())
+	{
+		cout << "Failed to open " << outputFileName << " for writing" << endl;
 		return false;
 	}
 	if (!IsEvenFileSize(inputFile))
@@ -164,6 +171,18 @@ bool UnpackFile(const string& inputFileName, const string& outputFileName)
 		return false;
 	}
 	UnpackData(inputFile, outputFile);
+
+	if (inputFile.bad())
+	{
+		cout << "Failed for reading data from input stream" << endl;
+		return false;
+	}
+
+	if (!outputFile.flush())
+	{
+		cout << "Failed for writing data in output stream" << endl;
+		return false;
+	}
 	return true;
 }
 
