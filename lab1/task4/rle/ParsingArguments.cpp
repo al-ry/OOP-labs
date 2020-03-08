@@ -1,21 +1,19 @@
 #include "stdafx.h"
 #include "ParsingArguments.h"
 
-bool defineMode(const string& firstArg, Mode& modeType)
+optional<Mode> defineMode(const string& firstArg)
 {
 	if (firstArg == "pack")
 	{
-		modeType = PACKING_MODE;
-		return true;
+		return Mode::PACKING_MODE;
 	}
 	if (firstArg == "unpack")
 	{
-		modeType = UNPACKING_MODE;
-		return true;
+		return Mode::UNPACKING_MODE;
 	}
-	return false;
+	return nullopt;
 }
-optional<Args> ParseArguments(int argc, char* argv[], Mode& modeType)
+optional<Args> ParseArguments(int argc, char* argv[])
 {
 	if (argc != ARGUMENTS_COUNT)
 	{
@@ -25,12 +23,13 @@ optional<Args> ParseArguments(int argc, char* argv[], Mode& modeType)
 		return nullopt;
 	}
 	Args args;
-	args.mode = argv[1];
-	if (!defineMode(args.mode, modeType))
+	auto mode = defineMode(argv[1]);
+	if (!mode)
 	{
 		cout << "Incorrect mode. Argument <mode>. Should be either <pack> or <unpack>.";
 		return nullopt;
 	}
+	args.mode = mode.value();
 	args.inputFileName = argv[2];
 	args.outputFileName = argv[3];
 	return args;
