@@ -167,13 +167,17 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="PackMachine.cpp" />
     <ClCompile Include="rle.cpp" />
+    <ClCompile Include="UnpackMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PackMachine.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="UnpackMachine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
