@@ -168,6 +168,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="PackMachine.cpp" />
+    <ClCompile Include="ParsingArguments.cpp" />
     <ClCompile Include="rle.cpp" />
     <ClCompile Include="UnpackMachine.cpp" />
   </ItemGroup>
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PackMachine.h" />
+    <ClInclude Include="ParsingArguments.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UnpackMachine.h" />
   </ItemGroup>

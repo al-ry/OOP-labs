@@ -24,6 +24,9 @@
     <ClCompile Include="UnpackMachine.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="ParsingArguments.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="test.bat">
@@ -38,6 +41,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="UnpackMachine.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ParsingArguments.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
