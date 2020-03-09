@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_SUITE(ProcessVector_function)
 
 
 
-	BOOST_AUTO_TEST_SUITE(when_processing_a_vector_with_one_negative_positive_number)
+	BOOST_AUTO_TEST_SUITE(when_processing_a_vector_with_one_positive_number)
 
 		BOOST_AUTO_TEST_CASE(should_multiply_this_number_by_itself)
 		{
