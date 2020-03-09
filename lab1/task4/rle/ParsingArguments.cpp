@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ParsingArguments.h"
 
-optional<Mode> defineMode(const string& firstArg)
+optional<Mode> DefineMode(const string& firstArg)
 {
 	if (firstArg == "pack")
 	{
@@ -23,7 +23,7 @@ optional<Args> ParseArguments(int argc, char* argv[])
 		return nullopt;
 	}
 	Args args;
-	auto mode = defineMode(argv[1]);
+	auto mode = DefineMode(argv[1]);
 	if (!mode)
 	{
 		cout << "Incorrect mode. Argument <mode>. Should be either <pack> or <unpack>.";
