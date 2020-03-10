@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "htmldecode.h"
 
-string ReplaceHtmlEssence(string& htmlStr, const string& replacableEssence, const string& appropiateSymbol)
+string ReplaceHtmlEntity(string& htmlStr, const string& replacableEssence, const string& appropiateSymbol)
 {
 	size_t indexPos = 0;
 	string resultStr;
@@ -23,11 +23,13 @@ string ReplaceHtmlEssence(string& htmlStr, const string& replacableEssence, cons
 	}
 	return resultStr;
 }
-string HtmlDecode(string& htmlString)
+string HtmlDecode(const string& htmlString)
 {
+	string tmpString = htmlString;
 	for (auto i = htmlEntities.begin(); i != htmlEntities.end(); ++i)
 	{
-		htmlString = ReplaceHtmlEssence(htmlString, i->first, i->second);
+		tmpString = ReplaceHtmlEntity(tmpString, i->first, i->second);
 	}
-	return htmlString;
+	string result;
+	return result = tmpString;
 }

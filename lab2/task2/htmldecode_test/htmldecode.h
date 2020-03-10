@@ -9,4 +9,4 @@ const map<string, string> htmlEntities = {
 	{ "&amp;", "&" }
 };
 
-string HtmlDecode(string& htmlString);
+string HtmlDecode(const string& htmlString);

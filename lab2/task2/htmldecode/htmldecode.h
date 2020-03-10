@@ -9,5 +9,5 @@ const map<string, string> htmlEntities = {
 	{ "&amp;", "&" }
 };
 
-string HtmlDecode(string& htmlString);
+string HtmlDecode(const string& htmlString);
 string ReplaceHtmlEntity(string& htmlStr, const string& replacableEssence, const string& appropiateSymbol);

@@ -23,11 +23,13 @@ string ReplaceHtmlEntity(string& htmlStr, const string& replacableEssence, const
 	}
 	return resultStr;
 }
-string HtmlDecode(string & htmlString)
+string HtmlDecode(const string & htmlString)
 {
+	string tmpString = htmlString;
 	for (auto i = htmlEntities.begin(); i != htmlEntities.end(); ++i)
 	{
-		htmlString = ReplaceHtmlEntity(htmlString, i->first, i->second);
+		tmpString = ReplaceHtmlEntity(tmpString, i->first, i->second);
 	}
-	return htmlString;
+	string result;
+	return result = tmpString;
 }
