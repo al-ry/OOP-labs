@@ -10,3 +10,4 @@ const map<string, string> htmlEntities = {
 };
 
 string HtmlDecode(string& htmlString);
+string ReplaceHtmlEntity(string& htmlStr, const string& replacableEssence, const string& appropiateSymbol);
