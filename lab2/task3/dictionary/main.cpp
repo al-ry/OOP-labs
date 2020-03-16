@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "dictionary.h"
 
+using namespace std;
+
 optional<string> GetArgument(int argc, char* argv[])
 {
 	string arg;
