@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "htmldecode.h"
 
+using namespace std;
+
 int main()
 {
 	string htmlStr;

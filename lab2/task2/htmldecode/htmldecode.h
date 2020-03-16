@@ -1,13 +1,5 @@
 #pragma once
-#include "stdafx.h"
 
-const map<string, string> htmlEntities = {
-	{ "&quot;", "\"" },
-	{ "&apos;", "\'" },
-	{ "&lt;", "<" },
-	{ "&gt;", ">" },
-	{ "&amp;", "&" }
-};
 
-string HtmlDecode(const string& htmlString);
-string ReplaceHtmlEntity(string& htmlStr, const string& replacableEssence, const string& appropiateSymbol);
+std::string ReplaceHtmlEntity(std::string& htmlStr, const std::string& replacableEssence, const std::string& appropiateSymbol);
+std::string HtmlDecode(const std::string& htmlString);

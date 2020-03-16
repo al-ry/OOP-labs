@@ -8,6 +8,3 @@
 #include <string>
 #include <algorithm>
 #include <windows.h>
-
-
-using namespace std;
