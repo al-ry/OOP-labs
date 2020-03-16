@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
 
-bool UnpackFile(const string& inputFileName, const string& outputFileName);
-bool IsEvenFileSize(ifstream& inputFile);
-void UnpackData(ifstream& inputFile, ofstream& outputFile);
+bool UnpackFile(const std::string& inputFileName, const std::string& outputFileName);
+bool IsEvenFileSize(std::istream& inputFile);
+void UnpackData(std::istream& inputFile, std::ostream& outputFile);
 

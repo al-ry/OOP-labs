@@ -1,7 +1,9 @@
 #include "stdafx.h"
+#include "UnpackMachine.h"
 
+using namespace std;
 
-bool IsEvenFileSize(ifstream& inputFile)
+bool IsEvenFileSize(istream& inputFile)
 {
 	streamoff fileSize = 0;
 	streamoff prevPosition;
@@ -12,7 +14,6 @@ bool IsEvenFileSize(ifstream& inputFile)
 
 	if (fileSize % 2 != 0)
 	{
-		cout << "File size is not even. Cannot unpack input file.";
 		return false;
 	}
 
@@ -20,7 +21,7 @@ bool IsEvenFileSize(ifstream& inputFile)
 	return true;
 }
 
-void UnpackData(ifstream& inputFile, ofstream& outputFile)
+void UnpackData(istream& inputFile, ostream& outputFile)
 {
 	char data = 0;
 	uint8_t byteAmount = 0;
@@ -55,6 +56,7 @@ bool UnpackFile(const string& inputFileName, const string& outputFileName)
 	}
 	if (!IsEvenFileSize(inputFile))
 	{
+		cout << "File size is not even. Cannot unpack input file.";
 		return false;
 	}
 
@@ -62,13 +64,13 @@ bool UnpackFile(const string& inputFileName, const string& outputFileName)
 
 	if (inputFile.bad())
 	{
-		cout << "Failed for reading data from input stream" << endl;
+		cout << "Failed to reading data from input stream" << endl;
 		return false;
 	}
 
 	if (!outputFile.flush())
 	{
-		cout << "Failed for writing data in output stream" << endl;
+		cout << "Failed to writing data in output stream" << endl;
 		return false;
 	}
 	return true;

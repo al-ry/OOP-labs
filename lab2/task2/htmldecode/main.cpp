@@ -3,9 +3,8 @@
 
 using namespace std;
 
-int main()
+void PrintPrompt()
 {
-	string htmlStr;
 	cout << "Enter a html code with html entites or EOF for ending the program." << endl;
 	cout << "For example: a &lg; b will be transformed a < b" << endl;
 	cout << "Available entities for transforming:" << endl;
@@ -14,6 +13,12 @@ int main()
 	cout << "3)&apos; -> \'" << endl;
 	cout << "4)&amp;; -> &" << endl;
 	cout << "5)&quot; -> \"" << endl << endl;
+}
+
+int main()
+{
+	void PrintPrompt();
+	string htmlStr;
 	while (getline(cin, htmlStr))
 	{
 		cout << HtmlDecode(htmlStr) << endl;

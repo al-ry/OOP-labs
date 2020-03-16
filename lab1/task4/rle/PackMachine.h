@@ -1,10 +1,15 @@
 #pragma once
-#include "stdafx.h"
 
-const int MAX_PACK = 0xFF;
+struct RLEPacket
+{
+	uint8_t byteCounter;
+	uint8_t dataByte;
+};
 
-void PackData(ifstream& inputFile, ofstream& outputFile);
-void WritePacket(ofstream& outputFile, uint8_t byteAmount, uint8_t byte);
-bool PackFile(const string& inputFileName, const string& outputFileName);
+void FlushPacket(RLEPacket& packet, std::ostream& outputFile);
+void PackByte(RLEPacket& packet, char byte, uint8_t& prevByte, std::ostream& outputFile);
+void PackData(std::istream& inputFile, std::ostream& outputFile);
+void WritePacket(std::ostream& outputFile, uint8_t byteAmount, uint8_t byte);
+bool PackFile(const std::string& inputFileName, const std::string& outputFileName);
 
 

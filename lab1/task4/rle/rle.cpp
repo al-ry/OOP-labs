@@ -1,9 +1,11 @@
 ﻿
 #include "stdafx.h"
+#include "ParsingArguments.h"
 #include "PackMachine.h"
 #include "UnpackMachine.h"
-#include "ParsingArguments.h"
 
+
+using namespace std;
 
 int main(int argc, char* argv[])
 {

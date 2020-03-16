@@ -1,20 +1,17 @@
 #pragma once
 
-#include "stdafx.h"
 enum class Mode
 {
 	PACKING_MODE,
 	UNPACKING_MODE,
 };
+
 struct Args
 {
 	Mode mode;
-	string inputFileName;
-	string outputFileName;
+	std::string inputFileName;
+	std::string outputFileName;
 };
 
-
-const int ARGUMENTS_COUNT = 4;
-
-optional<Mode> DefineMode(const string& firstArg);
-optional<Args> ParseArguments(int argc, char* argv[]);
+std::optional<Mode> DefineMode(const std::string& firstArg);
+std::optional<Args> ParseArguments(int argc, char* argv[]);

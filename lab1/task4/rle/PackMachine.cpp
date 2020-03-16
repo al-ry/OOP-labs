@@ -1,41 +1,51 @@
 #include "stdafx.h"
 #include "PackMachine.h"
 
+using namespace std;
 
-void PackData(ifstream& inputFile, ofstream& outputFile)
+const int MAX_PACK = 0xFF;
+
+void FlushPacket(RLEPacket& packet, ostream& outputFile)
 {
-	uint8_t byte = 0, prevByte = 0, byteCounter = 1;
+	outputFile.put(packet.byteCounter);
+	outputFile.put(packet.dataByte);
+}
+
+void PackByte(RLEPacket& packet, char byte, uint8_t& prevByte, ostream& outputFile)
+{
+	uint8_t dataByte;
+	dataByte = byte;
+	if (prevByte == dataByte && packet.byteCounter < MAX_PACK)
+	{
+		packet.byteCounter++;
+	}
+	else
+	{
+		FlushPacket(packet, outputFile);
+		packet.byteCounter = 1;
+		prevByte = byte;
+		packet.dataByte = dataByte;
+	}
+}
+
+void PackData(istream& inputFile, ostream& outputFile)
+{
+	uint8_t byte = 0, prevByte = 0;
+	RLEPacket packet{1, 0};
 	char ch;
 	inputFile.read(&ch, sizeof(char));
 	if (inputFile.eof())
 	{
 		return;
 	}
-	byte = ch;
-	prevByte = byte;
+	packet.dataByte = ch;
+	prevByte = packet.dataByte;
 	while (inputFile.read(&ch, sizeof(char)))
 	{
-		byte = ch;
-		if (prevByte == byte && byteCounter < MAX_PACK)
-		{
-			byteCounter++;
-		}
-		else
-		{
-			WritePacket(outputFile, byteCounter, prevByte);
-			byteCounter = 1;
-			prevByte = byte;
-		}
+		PackByte(packet, ch, prevByte, outputFile);
 	}
-	WritePacket(outputFile, byteCounter, prevByte);
+	FlushPacket(packet, outputFile);
 }
-void WritePacket(ofstream& outputFile, uint8_t byteAmount, uint8_t byte)
-{
-	outputFile.put(byteAmount);
-	outputFile.put(byte);
-}
-
-
 bool PackFile(const string& inputFileName, const string& outputFileName)
 {
 	ifstream inputFile;
@@ -57,16 +67,14 @@ bool PackFile(const string& inputFileName, const string& outputFileName)
 
 	if (inputFile.bad())
 	{
-		cout << "Failed for reading data from input stream" << endl;
+		cout << "Failed to reading data from input stream" << endl;
 		return false;
 	}
 
 	if (!outputFile.flush())
 	{
-		cout << "Failed for writing data in output stream" << endl;
+		cout << "Failed to writing data in output stream" << endl;
 		return false;
 	}
 	return true;
 }
-
-

@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "ParsingArguments.h"
 
+using namespace std;
+const int ARGUMENTS_COUNT = 4;
+
 optional<Mode> DefineMode(const string& firstArg)
 {
 	if (firstArg == "pack")
