@@ -2,6 +2,16 @@
 #include "stdafx.h"
 #include "htmldecode.h"
 
+using namespace std;
+
+const std::map<std::string, std::string> htmlEntities = {
+	{ "&quot;", "\"" },
+	{ "&apos;", "\'" },
+	{ "&lt;", "<" },
+	{ "&gt;", ">" },
+	{ "&amp;", "&" }
+};
+
 string ReplaceHtmlEntity(string& htmlStr, const string& replacableEssence, const string& appropiateSymbol)
 {
 	size_t indexPos = 0;

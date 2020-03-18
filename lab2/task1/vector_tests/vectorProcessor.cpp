@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "vectorProcessor.h"
 
+using namespace std;
+
 vector<double> ReadStream()
 {
 	return vector<double>(istream_iterator<double>(cin), istream_iterator<double>());

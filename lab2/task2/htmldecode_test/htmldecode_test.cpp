@@ -1,6 +1,8 @@
 ﻿#include "stdafx.h"
 #include "..\htmldecode\htmldecode.h"
 
+using namespace std;
+
 void VerifyHtmlDecode(std::string& sourceStr, const std::string& expectedTrimmedString)
 {
 	BOOST_CHECK_EQUAL(HtmlDecode(sourceStr), expectedTrimmedString);
