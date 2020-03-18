@@ -53,6 +53,6 @@ BOOST_AUTO_TEST_SUITE(SaveNewWord_function)
 		Dictionary newWords;
 		dictionary.emplace("мама", "mother");
 		string word = "слово";
-		BOOST_CHECK(SaveNewWord(dictionary, newWords, word), true);
+		BOOST_CHECK(SaveNewWord(dictionary, newWords, word), false);
 	}
 BOOST_AUTO_TEST_SUITE_END()
