@@ -89,6 +89,7 @@ void ProcessInputWords(Dictionary& dict, Dictionary& newWordsMap)
 		{
 			if (!SaveNewWord(dict, newWordsMap, inputWord))
 			{
+				continue;
 			}
 		}
 	}
