@@ -1,9 +1,11 @@
-#pragma once
 
+typedef std::multimap<std::string, std::string> Dictionary;
 
-bool ReadDictionary(const std::string& dictionatyFileName, std::multimap<std::string, std::string>& dictMap);
-void ProcessInputWords(const std::multimap<std::string, std::string>& dict, std::multimap<std::string, std::string>& newWordsMap, bool& newWord);
-void ProccesNewWord(std::multimap<std::string, std::string>& newWordsMap, std::string& inputWord, bool& newWord);
-bool SearchInDictionary(std::multimap<std::string, std::string>& dict, const std::string& inputWord);
-void SaveNewDictionary(const std::multimap<std::string, std::string>& newWordsMap, const std::string& fileName);
-bool IsNeedToSave();
+typedef bool (*IsSourceSDictionary)(const std::optional<std::string> &arg);
+bool SearchInDictionary(const Dictionary& dict, const std::string& inputWord);
+bool IsArgument(const std::optional<std::string> &arg);
+bool ReadDictionary(const std::string& dictionatyFileName, Dictionary& dictMap);
+void ProcessInputWords(Dictionary& dict, Dictionary& newWordsMap);
+bool SaveNewWord(Dictionary& dict, Dictionary& newWordsMap, std::string& inputWord);
+bool SaveNewDictionary(IsSourceSDictionary fn, const std::optional<std::string>& arg, const Dictionary& newWordsMap);
+bool IsNeedsSaving();

@@ -20,8 +20,8 @@ int main(int argc, char* argv[])
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	auto arg = GetArgument(argc, argv);
-	multimap<string, string> DictionaryMap;
-	multimap<string, string> NewWordsMap;
+	Dictionary DictionaryMap;
+	Dictionary NewWordsMap;
 	if (arg)
 	{
 		if (!ReadDictionary(arg.value(), DictionaryMap))
@@ -29,11 +29,13 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 	}
-	bool areNewWords = false;
-	ProcessInputWords(DictionaryMap, NewWordsMap, areNewWords);
-	if (areNewWords)
+	ProcessInputWords(DictionaryMap, NewWordsMap);
+	if (!NewWordsMap.empty())
 	{
-		SaveNewDictionary(NewWordsMap, arg.value());
+		if (!SaveNewDictionary(IsArgument, arg, NewWordsMap))
+		{
+			return 1;
+		}
 	}
 
 	return 0;

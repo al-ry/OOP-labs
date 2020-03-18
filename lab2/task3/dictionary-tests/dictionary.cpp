@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "dictionary.h"
 
 using namespace std;
@@ -16,85 +16,86 @@ bool ReadDictionary(const string& dictionatyFileName, Dictionary& dictionary)
 		return false;
 	}
 	string line;
-	while (!inputFile.eof())
+	while (getline(inputFile, line))
 	{
 		string word, translation;
+		int findPos, indexPos = 0;
 
-		getline(inputFile, word);
-		getline(inputFile, translation);
+		findPos = line.find(SPACE, indexPos);
+		word.append(line, indexPos, findPos);
+		translation.append(line, findPos + 1, line.length() - findPos);
 		dictionary.emplace(word, translation);
 		dictionary.emplace(translation, word);
 	}
 	if (inputFile.bad())
 	{
-		cout << "Failed to reading data from input dictionary" << endl;
+		cout << "Failed for reading data from input dictionary" << endl;
 		return false;
 	}
 	return true;
 }
 
-bool SearchInDictionary(const Dictionary& dict, const string& inputWord)
+bool SearchInDictionary(const Dictionary& dict, string& inputWord)
 {
+	transform(inputWord.begin(), inputWord.end(), inputWord.begin(), tolower);
 	auto translation = dict.find(inputWord);
 	if (translation == dict.end())
 	{
 		cout << "Unknown word"
-			 << " " << inputWord << ". Enter a translation or empty string for refusing." << endl;
+			 << "  " << inputWord << ". Enter a translation or empty string for refusing." << endl;
 		return false;
 	}
-	else
+	for (auto i = dict.begin(); i != dict.end(); i++)
 	{
-		auto eqr = dict.equal_range(inputWord);
-		for (auto it = eqr.first; it != eqr.second; ++it)
+		if (i->first == inputWord)
 		{
-			cout << it->second << " ";
+			cout << i->second << " ";
 		}
 	}
 	cout << endl;
 	return true;
 }
 
-bool SaveNewWord(Dictionary& dict, Dictionary& newWordsMap, string& inputWord)
+void ProccesNewWord(Dictionary& newWordsMap, string& inputWord)
 {
-	string translation = "";
+	string translation;
 	getline(cin, translation);
-	if (translation.empty())
+	if (!translation.empty())
 	{
-		cout << "Word"
-			 << " "
-			 << "\"" << inputWord << "\""
-			 << " was ignored" << endl;
-		return false;
-	}
-	else
-	{
-		dict.emplace(inputWord, translation);
-		dict.emplace(translation, inputWord);
 		newWordsMap.emplace(inputWord, translation);
 		cout << "Word"
 			 << " "
 			 << "\"" << inputWord << "\""
 			 << " was saved as"
 			 << " \"" << translation << "\"" << endl;
-		return true;
+	}
+	else
+	{
+		cout << "Word"
+			 << " " << inputWord << " was ignored" << endl;
 	}
 }
 
-void ProcessInputWords(Dictionary& dict, Dictionary& newWordsMap)
+void ProcessInputWords(const Dictionary& dict, Dictionary& newWordsMap)
 {
 	string inputWord;
 	while (getline(cin, inputWord) && inputWord != EXIT_VALUE)
 	{
-		if (!SearchInDictionary(dict, inputWord))
+		if (dict.empty())
 		{
-			if (!SaveNewWord(dict, newWordsMap, inputWord))
+			ProccesNewWord(newWordsMap, inputWord);
+		}
+		else
+		{
+			if (!SearchInDictionary(dict, inputWord))
 			{
+				ProccesNewWord(newWordsMap, inputWord);
 			}
 		}
 	}
 }
 
-bool IsNeedsSaving()
+bool IsNeedToSave()
 {
 	string decision;
 	getline(cin, decision);
@@ -114,8 +115,9 @@ bool SaveNewDictionary(IsSourceSDictionary fn, const optional<string>& arg,
 	const Dictionary& newWordsMap)
 {
 	cout << "The dictionary was changed. Enter \"Y\" or \"y\" to save changes before leaving." << endl;
-	if (IsNeedsSaving())
+	if (IsNeedToSave())
 	{
+
 		ofstream outputFile;
 		if (!fn(arg)) // создаем новый словарь
 		{
@@ -133,10 +135,9 @@ bool SaveNewDictionary(IsSourceSDictionary fn, const optional<string>& arg,
 			cout << "Failed to open " << arg.value() << " for writing" << endl;
 			return false;
 		}
-		for (auto i = newWordsMap.begin(); i != newWordsMap.end(); i++)
+		for (const auto& pair : newWordsMap)
 		{
-			outputFile << i->first << endl;
-			outputFile << i->second << endl;
+			outputFile << pair.first << " " << pair.second << endl;
 		}
 		if (!outputFile.flush())
 		{
