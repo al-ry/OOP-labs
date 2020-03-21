@@ -45,14 +45,3 @@ BOOST_AUTO_TEST_SUITE(SearchInDictionary_function)
 
 
 BOOST_AUTO_TEST_SUITE_END()
-
-BOOST_AUTO_TEST_SUITE(SaveNewWord_function)
-	BOOST_AUTO_TEST_CASE(ignores_a_new_word_if_the_user_has_not_entered_a_translation)
-	{
-		Dictionary dictionary;
-		Dictionary newWords;
-		dictionary.emplace("мама", "mother");
-		string word = "слово";
-		BOOST_CHECK(SaveNewWord(dictionary, newWords, word), false);
-	}
-BOOST_AUTO_TEST_SUITE_END()
