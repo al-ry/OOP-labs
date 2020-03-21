@@ -2,9 +2,6 @@
 #include "PrimeNumbers.h"
 using namespace std;
 
-const int MAX_BOUND = 100000000;
-const int MIN_BOUND = 2;
-
 optional<int> ParseArg(int argc, char* argv[])
 {
 	if (argc != 2)

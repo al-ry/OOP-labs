@@ -1,9 +1,6 @@
 ﻿#include "stdafx.h"
 #include "PrimeNumbers.h"
 
-const int MAX_BOUND = 100000000;
-const int MIN_BOUND = 2;
-
 using namespace std;
 
 bool CheckRange(int upperBound)
