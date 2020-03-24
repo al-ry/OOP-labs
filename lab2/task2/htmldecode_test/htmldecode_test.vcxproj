@@ -167,13 +167,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="htmldecode.cpp" />
+    <ClCompile Include="..\htmldecode\htmldecode.cpp" />
     <ClCompile Include="htmldecode_test.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="htmldecode.h" />
+    <ClInclude Include="..\htmldecode\htmldecode.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const map<string, string> htmlEntities = {
+const map<string, string> HTML_ENTITIES = {
 	{ "&quot;", "\"" },
 	{ "&apos;", "\'" },
 	{ "&lt;", "<" },
@@ -37,7 +37,7 @@ string ReplaceHtmlEntity(string& htmlStr, const string& replacableEssence, const
 string HtmlDecode(const string & htmlString)
 {
 	string tmpString = htmlString;
-	for (auto i = htmlEntities.begin(); i != htmlEntities.end(); ++i)
+	for (auto i = HTML_ENTITIES.begin(); i != HTML_ENTITIES.end(); ++i)
 	{
 		tmpString = ReplaceHtmlEntity(tmpString, i->first, i->second);
 	}

@@ -24,7 +24,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="htmldecode.cpp">
+    <ClCompile Include="..\htmldecode\htmldecode.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClInclude Include="stdafx.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="htmldecode.h">
+    <ClInclude Include="..\htmldecode\htmldecode.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

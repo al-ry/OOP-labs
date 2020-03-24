@@ -1,7 +1,8 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "vectorProcessor.h"
 
 using namespace std;
+
 
 vector<double> ReadStream()
 {
@@ -32,3 +33,4 @@ void PrintVector(const vector<double>& vector)
 	copy(vector.begin(), vector.end(), ostream_iterator<double>(cout, " "));
 	cout << endl;
 }
+

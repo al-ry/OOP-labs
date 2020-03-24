@@ -167,14 +167,14 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\vector\vectorProcessor.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="vectorProcessor.cpp" />
     <ClCompile Include="vectorProcessorTests.cpp" />
     <ClCompile Include="vector_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\vector\vectorProcessor.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="vectorProcessor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

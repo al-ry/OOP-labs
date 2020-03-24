@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "vectorProcessor.h"
+#include "../vector/vectorProcessor.h"
 
 using namespace std;
 
