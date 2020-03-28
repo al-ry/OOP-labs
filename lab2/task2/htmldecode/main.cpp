@@ -12,12 +12,14 @@ void PrintPrompt()
 	cout << "2)&gt; -> >" << endl;
 	cout << "3)&apos; -> \'" << endl;
 	cout << "4)&amp;; -> &" << endl;
-	cout << "5)&quot; -> \"" << endl << endl;
+	cout << "5)&quot; -> \"" << endl
+		 << endl;
 }
+
 
 int main()
 {
-	void PrintPrompt();
+	PrintPrompt();
 	string htmlStr;
 	while (getline(cin, htmlStr))
 	{
