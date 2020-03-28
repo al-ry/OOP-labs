@@ -10,6 +10,7 @@ void VerifyHtmlDecode(std::string& sourceStr, const std::string& expectedTrimmed
 
 
 BOOST_AUTO_TEST_SUITE(HtmlDecode_function)
+
 	BOOST_AUTO_TEST_CASE(must_convert_empty_string_to_empty_string)
 	{
 		string str = "";
@@ -45,4 +46,5 @@ BOOST_AUTO_TEST_SUITE(HtmlDecode_function)
 		string str = "M&amp;M&apos;s";
 		VerifyHtmlDecode(str, "M&M's");
 	}
+
 BOOST_AUTO_TEST_SUITE_END()
