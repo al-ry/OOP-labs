@@ -45,6 +45,7 @@ optional<int> ParsePort(const string& portStr, const Protocol& protocol)
 		}
 		catch (exception const& error)
 		{
+			cout << error.what() << endl;
 			return nullopt;
 		}
 		if (port >= 1 && port <= MAX_PORT)
