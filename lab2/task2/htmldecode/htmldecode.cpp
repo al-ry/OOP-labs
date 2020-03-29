@@ -1,10 +1,9 @@
 ﻿
 #include "stdafx.h"
 #include "htmldecode.h"
-
 using namespace std;
 
-const map<string, string> HTML_ENTITIES = {
+const unordered_map<string, string> HTML_ENTITIES = {
 	{ "&quot;", "\"" },
 	{ "&apos;", "\'" },
 	{ "&lt;", "<" },
