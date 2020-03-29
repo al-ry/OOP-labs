@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_SUITE(ParseURL_function)
 		BOOST_CHECK(protocol == Protocol::FTP);
 	}
 
-		BOOST_AUTO_TEST_CASE(parse_default_protocol)
+	BOOST_AUTO_TEST_CASE(parse_default_protocol)
 	{
 		BOOST_CHECK_EQUAL(ParseURL("http://localhost", protocol, port, host, document), true);
 		BOOST_CHECK(protocol == Protocol::HTTP);
