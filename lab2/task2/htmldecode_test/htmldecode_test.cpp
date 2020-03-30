@@ -68,6 +68,7 @@ BOOST_AUTO_TEST_SUITE(HtmlDecode_function)
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
+
 	BOOST_AUTO_TEST_SUITE(when_processing_apos_without_ampSymbol_after_amp_entity)
 		BOOST_AUTO_TEST_CASE(must_replace_amp_entity_without_converting_apos_entity)
 		{
