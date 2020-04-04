@@ -15,7 +15,8 @@ private:
 	bool Info(std::istream& args);
 	bool SelectChannel(std::istream& args);
 	bool SelectPreviousChannel(std::istream& args);
-
+	bool SetChannelName(std::istream& args);
+	bool DeleteChannelName(std::istream& args);
 private:
 
 	using Handler = std::function<bool(std::istream& args)>;

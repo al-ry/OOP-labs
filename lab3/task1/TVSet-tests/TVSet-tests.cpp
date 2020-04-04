@@ -73,6 +73,81 @@ BOOST_FIXTURE_TEST_SUITE(TVSet, TVSetFixture)
 			BOOST_CHECK(!tv.SelectChannel(100));
 			BOOST_CHECK_EQUAL(tv.GetChannel(), 42);
 		}
+
+	    BOOST_AUTO_TEST_CASE(can_select_channel_by_name)
+		{
+			std::string channelName = "TNT";
+			BOOST_CHECK(tv.SetChannelName(10, channelName));
+			tv.SelectChannel(19);
+			BOOST_CHECK(tv.SelectChannel(channelName));
+			BOOST_CHECK_EQUAL(tv.GetChannel(), 10);
+		}
+
+		BOOST_AUTO_TEST_CASE(cannot_select_nonexistance_channel_by_name)
+		{
+			BOOST_CHECK(!tv.SelectChannel('dtv'));
+		}
+	    BOOST_AUTO_TEST_CASE(can_set_channel_by_name)
+		{
+			std::string channelName = "TNT";
+			BOOST_CHECK(tv.SetChannelName(10, channelName));
+		}
+		BOOST_AUTO_TEST_CASE(can_get_channel_name)
+		{
+			std::string channelName = "TNT";
+			BOOST_CHECK(tv.SetChannelName(10, channelName));
+			BOOST_CHECK_EQUAL(tv.GetChannelName(10), channelName);
+		}
+		BOOST_AUTO_TEST_CASE(can_get_channel_by_name)
+		{
+			std::string channelName = "TNT";
+			BOOST_CHECK(tv.SetChannelName(10, channelName));
+			BOOST_CHECK_EQUAL(tv.GetChannelByName(channelName), 10);
+		}
+		BOOST_AUTO_TEST_CASE(cannot_set_channel_by_empty_name)
+		{
+			BOOST_CHECK(!tv.SetChannelName(3, ""));
+		}
+		BOOST_AUTO_TEST_CASE(cannot_set_channel_with_one_space)
+		{
+			BOOST_CHECK(!tv.SetChannelName(5, " "));
+		}
+
+		BOOST_AUTO_TEST_CASE(can_set_channel_with_extra_spaces)
+		{
+			std::string channelName = "     Russia    24    ";
+			BOOST_CHECK(tv.SetChannelName(8, channelName));
+			BOOST_CHECK_EQUAL(tv.GetChannelName(8), "Russia 24");
+			
+		}
+		BOOST_AUTO_TEST_CASE(can_redefine_channel_name)
+		{
+			BOOST_CHECK(tv.SetChannelName(8, "Discovery"));
+			BOOST_CHECK(tv.SetChannelName(5, "Discovery"));
+			BOOST_CHECK_EQUAL(tv.GetChannelName(5), "Discovery");
+
+			BOOST_CHECK(tv.GetChannelName(8).empty());
+		}
+
+		BOOST_AUTO_TEST_CASE(can_delete_channel_by_name)
+		{
+			tv.SetChannelName(5, "sts");
+			BOOST_CHECK(tv.GetChannelByName("sts"));
+			BOOST_CHECK(tv.DeleteChannelName("sts"));
+			BOOST_CHECK(!tv.GetChannelByName("sts"));
+		}
+		BOOST_AUTO_TEST_CASE(can_keep_chosen_channel_after_deleting)
+		{
+			tv.SetChannelName(5, "sts");
+			tv.SelectChannel("sts");
+			BOOST_CHECK(tv.DeleteChannelName("sts"));
+			BOOST_CHECK_EQUAL(tv.GetChannel(), 5);
+		}
+		BOOST_AUTO_TEST_CASE(cannot_delete_channel_with_out_name)
+		{
+			BOOST_CHECK(!tv.DeleteChannelName("sts"));
+		}
+
 	BOOST_AUTO_TEST_SUITE_END()
 
 	struct after_subsequent_turning_on_ : when_turned_on_
@@ -111,14 +186,49 @@ BOOST_FIXTURE_TEST_SUITE(TVSet, TVSetFixture)
 
 	BOOST_AUTO_TEST_SUITE_END()
 
+	struct after_subsequent_turning_on_and_setting_name_ : when_turned_on_
+	{
+		after_subsequent_turning_on_and_setting_name_()
+		{
+			tv.SetChannelName(1, "first");
+			tv.TurnOff();
+			tv.TurnOn();
+		}
+	};
 
-	// Напишите тесты для недостающего функционала класса CTVSet (если нужно)
-	//	и для дополнительных заданий на бонусные баллы (если нужно)
-	// После написания каждого теста убедитесь, что он не проходит.
-	// Доработайте простейшим образом класс CTVSet, чтобы этот тест и предыдущие проходили
-	// При необходимости выполните рефакторинг кода, сохраняя работоспособность тестов
-	// При необходимости используйте вложенные тесты (как использующие fixture, так и нет)
-	// Имена тестам и test suite-ам давайте такие, чтобы выводимая в output иерархия
-	//	тестов читалась как спецификация на английском языке, описывающая поведение телевизора
+
+	BOOST_FIXTURE_TEST_SUITE(after_subsequent_turning_on_and_setting_name, after_subsequent_turning_on_and_setting_name_)
+		BOOST_AUTO_TEST_CASE(can_get_channel_by_name)
+		{
+			BOOST_CHECK_EQUAL(tv.GetChannelByName("first"), 1);
+		}
+		BOOST_AUTO_TEST_CASE(can_get_channel_name)
+		{
+			BOOST_CHECK_EQUAL(tv.GetChannelName(1), "first");
+		}
+		BOOST_AUTO_TEST_CASE(can_delete_channel_name)
+		{
+			BOOST_CHECK(tv.DeleteChannelName("first"));
+			BOOST_CHECK(tv.GetChannelName(1).empty());
+			BOOST_CHECK(tv.GetChannelByName("first") == 0);
+		}
+		BOOST_AUTO_TEST_CASE(can_select_channel_by_name)
+		{
+			BOOST_CHECK(tv.SelectChannel("first"));
+			BOOST_CHECK_EQUAL(tv.GetChannel(), 1);
+		}
+		BOOST_AUTO_TEST_CASE(cant_set_two_channels_by_one_name)
+		{
+			BOOST_CHECK(tv.SetChannelName(8, "first"));
+			BOOST_CHECK(tv.GetChannelName(5).empty());
+			BOOST_CHECK_EQUAL(tv.GetChannelByName("first"), 8);
+		}
+		BOOST_AUTO_TEST_CASE(can_rename_channel)
+		{
+			BOOST_CHECK(tv.SetChannelName(1, "first channel"));
+			BOOST_CHECK_EQUAL(tv.GetChannelName(1), "first channel");
+			BOOST_CHECK_EQUAL(tv.GetChannelByName("first channel"), 1);
+		}
+	BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()
