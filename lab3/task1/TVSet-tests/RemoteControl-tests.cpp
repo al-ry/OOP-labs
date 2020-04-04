@@ -177,6 +177,11 @@ BOOST_FIXTURE_TEST_SUITE(Remote_Control, RemoteControlFixture)
 				VerifyCommandHandling("SetChannelName 2    5", 1, "Channel name has been seted\n");
 				BOOST_CHECK_EQUAL(tv.GetChannelName(2), "5");
 			}
+			BOOST_AUTO_TEST_CASE(cannot_set_channel_name_to_out_of_range_number)
+			{
+				tv.TurnOn();
+				VerifyCommandHandling("SetChannelName 100 channel", 1, "Cannot set channel name\n");
+			}
 
 		BOOST_AUTO_TEST_SUITE_END()
 
