@@ -54,7 +54,7 @@ bool SearchInDictionary(const Dictionary& dict, const string& inputWord)
 	return true;
 }
 
-bool SaveNewWord(Dictionary& dict, Dictionary& newWordsMap, string& inputWord)
+bool SaveNewWord(Dictionary& dict, Dictionary& newWordsMap, const string& inputWord)
 {
 	string translation;
 	getline(cin, translation);
