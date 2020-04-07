@@ -6,14 +6,13 @@ using namespace std;
 const char SPACE = ' ';
 const string EXIT_VALUE = "...";
 
-bool ReadDictionary(const string& dictionatyFileName, Dictionary& dictionary)
+bool ReadDictionary(const std::string& dictionatyFileName, Dictionary& sourceDict)
 {
 	ifstream inputFile;
 	inputFile.open(dictionatyFileName);
 	if (!inputFile.is_open())
 	{
-		cout << "Failed to open " << dictionatyFileName << " for reading" << endl;
-		return false;
+		return true;
 	}
 	string line;
 	while (!inputFile.eof())
@@ -22,8 +21,8 @@ bool ReadDictionary(const string& dictionatyFileName, Dictionary& dictionary)
 
 		getline(inputFile, word);
 		getline(inputFile, translation);
-		dictionary.emplace(word, translation);
-		dictionary.emplace(translation, word);
+		sourceDict.emplace(word, translation);
+		sourceDict.emplace(translation, word);
 	}
 	if (inputFile.bad())
 	{
@@ -35,8 +34,7 @@ bool ReadDictionary(const string& dictionatyFileName, Dictionary& dictionary)
 
 bool SearchInDictionary(const Dictionary& dict, const string& inputWord)
 {
-	auto translation = dict.find(inputWord);
-	if (translation == dict.end())
+	if (auto translation = dict.find(inputWord); translation == dict.end())
 	{
 		cout << "Unknown word"
 			 << " " << inputWord << ". Enter a translation or empty string for refusing." << endl;
@@ -54,7 +52,7 @@ bool SearchInDictionary(const Dictionary& dict, const string& inputWord)
 	return true;
 }
 
-bool SaveNewWord(Dictionary& dict, Dictionary& newWordsMap, const string& inputWord)
+Dictionary SaveNewWord(Vocabluary& dict, const string& inputWord)
 {
 	string translation;
 	getline(cin, translation);
@@ -64,88 +62,81 @@ bool SaveNewWord(Dictionary& dict, Dictionary& newWordsMap, const string& inputW
 			 << " "
 			 << "\"" << inputWord << "\""
 			 << " was ignored" << endl;
-		return false;
+		return dict.newWordsMap;
 	}
 	else
 	{
-		dict.emplace(inputWord, translation);
-		dict.emplace(translation, inputWord);
-		newWordsMap.emplace(inputWord, translation);
+		dict.dictionaryMap.emplace(inputWord, translation);
+		dict.dictionaryMap.emplace(translation, inputWord);
+		dict.newWordsMap.emplace(inputWord, translation);
 		cout << "Word"
 			 << " "
 			 << "\"" << inputWord << "\""
 			 << " was saved as"
 			 << " \"" << translation << "\"" << endl;
-		return true;
+		return dict.newWordsMap;
 	}
 }
 
-void ProcessInputWords(Dictionary& dict, Dictionary& newWordsMap)
+void ProcessInputWords(Vocabluary &dict)
 {
 	string inputWord;
 	while (getline(cin, inputWord) && inputWord != EXIT_VALUE)
 	{
-		if (!SearchInDictionary(dict, inputWord))
+		if (!SearchInDictionary(dict.dictionaryMap, inputWord))
 		{
-			if (!SaveNewWord(dict, newWordsMap, inputWord))
-			{
-				continue;
-			}
+			dict.newWordsMap = SaveNewWord(dict, inputWord);
 		}
 	}
 }
 
 bool IsNeedsSaving()
 {
+	cout << "The dictionary was changed. Enter \"Y\" or \"y\" to save changes before leaving." << endl;
 	string decision;
 	getline(cin, decision);
 	return decision == "Y" || decision == "y";
 }
 
-bool IsArgument(const optional<string>& arg)
+bool WriteNewWordsInFile(const string fileName, const Dictionary& newWordsMap)
 {
-	if (arg == nullopt)
+	ofstream outputDictionary;
+	outputDictionary.open(fileName, ios::app);
+
+	if (!outputDictionary.is_open())
 	{
+		cout << "Failed to open " << fileName << " for writing data."
+			 << endl;
+		return false;
+	}
+	for (const auto& [word, translation] : newWordsMap)
+	{
+		outputDictionary << word << endl
+						 << translation << endl;
+	}
+	if (!outputDictionary.flush())
+	{
+		cout << "Failed for writing data in output stream" << endl;
 		return false;
 	}
 	return true;
 }
 
-bool SaveNewDictionary(IsSourceSDictionary fn, const optional<string>& arg,
-	const Dictionary& newWordsMap)
+bool UpdateDictionary(string &fileName, const Dictionary& newWordsDict)
 {
-	cout << "The dictionary was changed. Enter \"Y\" or \"y\" to save changes before leaving." << endl;
 	if (IsNeedsSaving())
 	{
 		ofstream outputFile;
-		if (!fn(arg)) // создаем новый словарь
+		if (!WriteNewWordsInFile(fileName, newWordsDict))
 		{
-			string dictionaryName;
-			cout << "Enter a new dictionary name" << endl;
-			cin >> dictionaryName;
-			outputFile.open(dictionaryName);
-		}
-		else //если словарь уже есть, то дописываем в него новые слова
-		{
-			outputFile.open(arg.value(), ios::app);
-		}
-		if (!outputFile.is_open())
-		{
-			cout << "Failed to open " << arg.value() << " for writing" << endl;
 			return false;
 		}
-		for (auto i = newWordsMap.begin(); i != newWordsMap.end(); i++)
+		else
 		{
-			outputFile << i->first << endl;
-			outputFile << i->second << endl;
+			cout << "The changes were successfully saved. Check file out."
+				 << " Goodbye" << endl;
+			return true;	
 		}
-		if (!outputFile.flush())
-		{
-			cout << "Failed for writing data in output stream" << endl;
-			return false;
-		}
-		cout << "The changes were successfully saved. Check file out."
-			 << " Goodbye" << endl;
 	}
 	else
 	{

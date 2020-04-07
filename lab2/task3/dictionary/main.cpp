@@ -19,20 +19,20 @@ int main(int argc, char* argv[])
 	setlocale(LC_ALL, "Russian");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	auto arg = GetArgument(argc, argv);
-	Dictionary DictionaryMap;
-	Dictionary NewWordsMap;
-	if (arg)
+	auto sourceDictionaryFile = GetArgument(argc, argv);
+	Vocabluary dictionary;
+	if (!sourceDictionaryFile)
 	{
-		if (!ReadDictionary(arg.value(), DictionaryMap))
-		{
-			return 1;
-		}
+		return 1;
 	}
-	ProcessInputWords(DictionaryMap, NewWordsMap);
-	if (!NewWordsMap.empty())
+	if (!ReadDictionary(sourceDictionaryFile.value(), dictionary.dictionaryMap))
 	{
-		if (!SaveNewDictionary(IsArgument, arg, NewWordsMap))
+		return 1;
+	}
+	ProcessInputWords(dictionary);
+	if (!dictionary.newWordsMap.empty())
+	{
+		if (!UpdateDictionary(sourceDictionaryFile.value(), dictionary.newWordsMap))
 		{
 			return 1;
 		}
