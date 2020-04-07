@@ -10,3 +10,4 @@ struct Vocabluary
 bool ReadDictionary(const std::string& dictionatyFileName, Dictionary& sourceDict);
 void ProcessInputWords(Vocabluary& dict);
 bool UpdateDictionary(std::string &fileName, const Dictionary& newWordsDict);
+bool SearchInDictionary(const Dictionary& dict, const std::string& inputWord);
