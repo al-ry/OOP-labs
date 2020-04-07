@@ -41,3 +41,9 @@ vector<bool> GetSieve(int upperBound)
 	}
 	return sieve;
 }
+
+void PrintPrimeNumbersSet(const std::set<int> sieve)
+{
+	copy(sieve.begin(), sieve.end(), ostream_iterator<double>(cout, " "));
+	cout << endl;
+}

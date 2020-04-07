@@ -18,8 +18,13 @@ optional<int> ParseArg(int argc, char* argv[])
 	catch (exception const& error)
 	{
 		cout << "Incorrect Input. Argument should be a number" << endl;
-		cout << "Error " << error.what() << endl;
+		cout << "Error: " << error.what() << endl;
 		return nullopt;
+	}
+	if (!CheckRange(arg))
+	{
+		cout << "Number: " << arg << " is out of range";
+		return 1;
 	}
 	return arg;
 }
@@ -32,12 +37,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	int upperBound = arg.value();
-	if (!CheckRange(upperBound))
-	{
-		cout << "Number: " << upperBound << " is out of range";
-		return 1;
-	}
 	set<int> primeNumbers = GeneratePrimeNumbersSet(upperBound);
-	copy(primeNumbers.begin(), primeNumbers.end(), ostream_iterator<double>(cout, " "));
+	PrintPrimeNumbersSet(primeNumbers);
 	return 0;
 }

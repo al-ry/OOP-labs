@@ -57,18 +57,19 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(GeneratePrimeNumbersSet_function)
 
-	//BOOST_AUTO_TEST_SUITE(when_upper_bound_is_max)
-	//	BOOST_AUTO_TEST_CASE(should_return_amount_prime_numbers_in_max_bound)
-	//	{
-	//		int number = 100000000;
-	//		set<int> primeNumbers;
-	//		primeNumbers = GeneratePrimeNumbersSet(number);
-	//		int res = primeNumbers.size();
+	#if NDEBUG
+	BOOST_AUTO_TEST_SUITE(when_upper_bound_is_max)
+		BOOST_AUTO_TEST_CASE(should_return_amount_prime_numbers_in_max_bound)
+		{
+			int number = 100000000;
+			set<int> primeNumbers;
+			primeNumbers = GeneratePrimeNumbersSet(number);
+			int res = primeNumbers.size();
 
-	//		BOOST_CHECK_EQUAL(res, 5761455);
-	//	}
-	//BOOST_AUTO_TEST_SUITE_END()
-
+			BOOST_CHECK_EQUAL(res, 5761455);
+		}
+	BOOST_AUTO_TEST_SUITE_END()
+	#endif
 	BOOST_AUTO_TEST_SUITE(when_upper_bound_is_20)
 		BOOST_AUTO_TEST_CASE(should_return_amount_prime_numbers_in_20_upper_bound)
 		{
