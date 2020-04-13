@@ -14,11 +14,11 @@ bool CheckRange(int upperBound)
 
 set<int> GeneratePrimeNumbersSet(int upperBound)
 {
-	vector<bool> sieve = GetSieve(upperBound);
+	vector<bool> isPrime = GetSieve(upperBound);
 	set<int> primeNumbersSet;
 	for (int i = MIN_BOUND; i <= upperBound; i++)
 	{
-		if (sieve[i])
+		if (isPrime[i])
 		{
 			primeNumbersSet.insert(i);
 		}
@@ -28,21 +28,21 @@ set<int> GeneratePrimeNumbersSet(int upperBound)
 
 vector<bool> GetSieve(int upperBound)
 {
-	vector<bool> sieve(upperBound + 1, true);
+	vector<bool> isPrime(upperBound + 1, true);
 	for (int i = MIN_BOUND; i * i <= upperBound; i++)
 	{
-		if (sieve[i])
+		if (isPrime[i])
 		{
 			for (int k = i * i; k <= upperBound; k += i)
 			{
-				sieve[k] = false;
+				isPrime[k] = false;
 			}
 		}
 	}
-	return sieve;
+	return isPrime;
 }
 
-void PrintPrimeNumbersSet(const std::set<int> sieve)
+void PrintPrimeNumbersSet(const std::set<int>& sieve)
 {
 	copy(sieve.begin(), sieve.end(), ostream_iterator<double>(cout, " "));
 	cout << endl;
