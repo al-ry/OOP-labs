@@ -10,16 +10,15 @@ class CCalculator
 public:
 	CCalculator()
 		: m_variables(){};
-	VariableMap DeclareVariable(const std::string& var);
+	bool DeclareVariable(const std::string& var);
 
 
-	
-	//VariableMap GetVariables() const;
+	VariableMap GetVariables() const;
 
 
 private:
-	//bool IsVarAlreadyExist(const std::string& var);
-
+	bool IsVarAlreadyExist(const std::string& var) const;
+	bool IsCorrectVarName(const std::string& varName) const;
 
 private:
 	VariableMap m_variables;

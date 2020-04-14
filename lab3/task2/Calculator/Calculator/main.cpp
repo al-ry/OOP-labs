@@ -5,6 +5,6 @@ int main()
 {
 	CCalculator calc;
 	calc.DeclareVariable("var");
-	
+	calc.DeclareVariable("var");
 	return 0;
 }
