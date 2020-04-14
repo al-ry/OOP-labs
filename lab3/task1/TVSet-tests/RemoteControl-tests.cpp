@@ -149,32 +149,32 @@ BOOST_FIXTURE_TEST_SUITE(Remote_Control, RemoteControlFixture)
 			BOOST_AUTO_TEST_CASE(can_set_channel_name_when_tv_is_on)
 			{
 				tv.TurnOn();
-				VerifyCommandHandling("SetChannelName 2 first", 1, "Channel name has been seted\n");
+				VerifyCommandHandling("SetChannelName 2 first", 1, "Channel name has been set\n");
 				BOOST_CHECK_EQUAL(tv.GetChannelName(2), "first");
 
 			}
 			BOOST_AUTO_TEST_CASE(can_set_channel_name_with_extra_spaces_when_tv_is_on)
 			{
 				tv.TurnOn();
-				VerifyCommandHandling("SetChannelName 2      first    ", 1, "Channel name has been seted\n");
+				VerifyCommandHandling("SetChannelName 2      first    ", 1, "Channel name has been set\n");
 				BOOST_CHECK_EQUAL(tv.GetChannelName(2), "first");
 			}
 			BOOST_AUTO_TEST_CASE(can_set_channel_name_with_few_words_when_tv_is_on)
 			{
 				tv.TurnOn();
-				VerifyCommandHandling("SetChannelName 2 first channel", 1, "Channel name has been seted\n");
+				VerifyCommandHandling("SetChannelName 2 first channel", 1, "Channel name has been set\n");
 				BOOST_CHECK_EQUAL(tv.GetChannelName(2), "first channel");
 			}
 			BOOST_AUTO_TEST_CASE(can_set_channel_name_with_few_words_and_extra_spaces_when_tv_is_on)
 			{
 				tv.TurnOn();
-				VerifyCommandHandling("SetChannelName 2    first    channel  ", 1, "Channel name has been seted\n");
+				VerifyCommandHandling("SetChannelName 2    first    channel  ", 1, "Channel name has been set\n");
 				BOOST_CHECK_EQUAL(tv.GetChannelName(2), "first channel");
 			}
 			BOOST_AUTO_TEST_CASE(can_set_channel_name_when_channel_name_is_number_and_when_tv_is_on)
 			{
 				tv.TurnOn();
-				VerifyCommandHandling("SetChannelName 2    5", 1, "Channel name has been seted\n");
+				VerifyCommandHandling("SetChannelName 2    5", 1, "Channel name has been set\n");
 				BOOST_CHECK_EQUAL(tv.GetChannelName(2), "5");
 			}
 			BOOST_AUTO_TEST_CASE(cannot_set_channel_name_to_out_of_range_number)
