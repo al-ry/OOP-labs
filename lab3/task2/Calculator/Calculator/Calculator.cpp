@@ -12,7 +12,7 @@ bool CCalculator::IsCorrectVarName(const std::string& varName) const
 
 bool CCalculator::DeclareVariable(const std::string& var)
 {
-	if (IsVarAlreadyExist(var) || !IsCorrectVarName(var))
+	if (IsVarExist(var) || !IsCorrectVarName(var))
 	{
 		return false;
 	}
@@ -20,7 +20,7 @@ bool CCalculator::DeclareVariable(const std::string& var)
 	return true;
 }
 
-bool CCalculator::IsVarAlreadyExist(const std::string& var) const
+bool CCalculator::IsVarExist(const std::string& var) const
 {
 	return m_variables.find(var) != m_variables.end();
 }
@@ -28,4 +28,40 @@ bool CCalculator::IsVarAlreadyExist(const std::string& var) const
 VariableMap CCalculator::GetVariables() const
 {
 	return m_variables;
+}
+
+bool CCalculator::AssignValueToVariable(const std::string& lIdentifier, const std::string& rIdentifier)
+{
+	if (rIdentifier.empty())
+	{
+		return false;
+	}
+	if (!IsVarExist(lIdentifier))
+	{
+		if (!DeclareVariable(lIdentifier))
+		{
+			return false;
+		}
+	}
+
+	m_variables.at(lIdentifier) = GetVariableValue(rIdentifier);
+	char* pEnd = nullptr; 
+	strtod(rIdentifier.c_str(), &pEnd);
+	if (!*pEnd == '\0')
+	{
+		return false;
+	}
+	m_variables.at(lIdentifier) = atof(rIdentifier.c_str());
+
+
+	return true;
+}
+
+double CCalculator::GetVariableValue(const std::string& varName) const
+{
+	if (IsVarExist(varName))
+	{
+		return m_variables.at(varName);
+	}
+	return NAN;
 }
