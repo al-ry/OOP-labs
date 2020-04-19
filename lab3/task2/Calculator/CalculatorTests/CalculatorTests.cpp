@@ -108,5 +108,118 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 
 	BOOST_AUTO_TEST_SUITE_END()
 
+	struct when_there_are_declared_vars_ : CalculatorFixture
+	{
+		when_there_are_declared_vars_()
+		{
+			calculator.AssignValueToVariable("y", "50");
+			calculator.AssignValueToVariable("x", "30");
+		}
+	};
+
+	BOOST_FIXTURE_TEST_SUITE(when_there_are_declared_vars, when_there_are_declared_vars_)
+
+		BOOST_AUTO_TEST_SUITE(Test_MakeFunction_method)
+
+			BOOST_AUTO_TEST_CASE(can_make_function_with_var_value)
+			{		
+				calculator.MakeFunction("fnX", "x");
+				auto fnList = calculator.GetFunctions();
+				BOOST_CHECK(fnList.find("fnX") != fnList.end());
+			};
+			BOOST_AUTO_TEST_CASE(cannot_make_function_with_name_of_variable)
+			{
+				BOOST_CHECK(!calculator.MakeFunction("x", "y"));
+			};
+
+			BOOST_AUTO_TEST_CASE(cannot_make_function_with_undefined_var_value)
+			{
+				BOOST_CHECK(!calculator.MakeFunction("fnX", "undefined_var"));
+			};
+			BOOST_AUTO_TEST_CASE(cannot_make_functions_with_similar_names)
+			{
+				calculator.MakeFunction("fnX", "x");
+				BOOST_CHECK(!calculator.MakeFunction("fnX", "y"));
+			};
+			BOOST_AUTO_TEST_CASE(can_get_function_value)
+			{
+				calculator.MakeFunction("fnX", "x");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("fnX"), 30);
+			};
+			BOOST_AUTO_TEST_CASE(should_change_fn_val_after_setting_other_val_to_var)
+			{
+				calculator.MakeFunction("fnR", "y");
+				calculator.AssignValueToVariable("y", "x");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("fnR"), 30);
+			};
+			BOOST_AUTO_TEST_CASE(can_make_function_with_two_operands)
+			{
+				BOOST_CHECK(calculator.MakeFunction("SumXYFn", "y", Operator::ADDITION, "x"));
+			};
+			BOOST_AUTO_TEST_CASE(cannot_make_function_with_undefined_vars)
+			{
+				BOOST_CHECK(!calculator.MakeFunction("SumXYFn", "undefined", Operator::ADDITION, "x"));
+				BOOST_CHECK(!calculator.MakeFunction("SumXYFn", "undefined", Operator::ADDITION, "qwe"));
+				BOOST_CHECK(!calculator.MakeFunction("SumXYFn", "x", Operator::ADDITION, "qwe"));
+			};
+			BOOST_AUTO_TEST_CASE(can_make_function_with_function_operand)
+			{
+				BOOST_CHECK(calculator.MakeFunction("FnX+Y", "y", Operator::ADDITION, "x"));
+				BOOST_CHECK(calculator.MakeFunction("FnX+SumXY", "x", Operator::ADDITION, "FnX+Y"));
+				BOOST_CHECK(calculator.MakeFunction("FnSumXY+SumXY", "FnX+Y", Operator::ADDITION, "FnX+Y"));
+			};
+			BOOST_AUTO_TEST_CASE(can_get_function_value_after_making)
+			{
+				calculator.MakeFunction("SumXYFn", "y", Operator::ADDITION, "x");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("SumXYFn"), 80);
+			};
+		BOOST_AUTO_TEST_SUITE_END()
+
+	BOOST_AUTO_TEST_SUITE_END()
+
+	struct when_there_are_functions_ : when_there_are_declared_vars_
+	{
+		when_there_are_functions_()
+		{
+			calculator.MakeFunction("XVal", "x");
+			calculator.MakeFunction("Sum(x+y)", "x", Operator::ADDITION, "y");
+		}
+	};
+
+	BOOST_FIXTURE_TEST_SUITE(when_there_are_functions, when_there_are_functions_)
+		BOOST_AUTO_TEST_SUITE(Test_MakeFunction)
+			BOOST_AUTO_TEST_CASE(can_get_fn_value)
+			{
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum(x+y)"), 80);
+			};
+			
+			BOOST_AUTO_TEST_CASE(can_get_fn_value_when_one_operand_is_fn)
+			{
+				calculator.MakeFunction("Sum(x+y)-y", "Sum(x+y)", Operator::SUBTRACTION, "y");
+				double res = calculator.GetVariableValue("x");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum(x+y)-y"), res);
+			};
+			BOOST_AUTO_TEST_CASE(should_change_fn_value_when_changes_member_of_fn)
+			{
+				calculator.AssignValueToVariable("x", "100");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("XVal"), 100);
+			};
+			BOOST_AUTO_TEST_CASE(after_changing_vars_value_should_changes_fn_value)
+			{
+				calculator.AssignValueToVariable("x", "100");
+				calculator.AssignValueToVariable("y", "100");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum(x+y)"), 200);
+			};
+			BOOST_AUTO_TEST_CASE(after_changing_vars_and_substract_two_fn_which_contains_these_vars_should_change_both_fns_val)
+			{
+				calculator.AssignValueToVariable("x", "100");
+				calculator.AssignValueToVariable("y", "100");
+				calculator.MakeFunction("XVal+Sum(x+y)", "Sum(x+y)", Operator::SUBTRACTION, "XVal");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("XVal+Sum(x+y)"), 100);
+			};
+
+		BOOST_AUTO_TEST_SUITE_END()
+	BOOST_AUTO_TEST_SUITE_END()
+
 		
 BOOST_AUTO_TEST_SUITE_END()
