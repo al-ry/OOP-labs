@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include<queue>
 
 enum class Operator
 {
@@ -28,6 +29,7 @@ struct Function
 };
 typedef std::map<std::string, double> VariablesMap;
 typedef std::map<std::string, Function> FunctionsMap;
+typedef std::vector<std::string> FunctionsOrder;
 
 class CCalculator
 {
@@ -43,7 +45,7 @@ public:
 
 	VariablesMap GetVariables() const;
 	FunctionsMap GetFunctions() const; 
-	double GetVariableValue(const std::string& varName) const;
+	double GetVarValue(const std::string& varName) const;
 	double GetFnValue(const std::string& fnName) const;
 
 private:
@@ -51,10 +53,13 @@ private:
 	bool IsFnExist(const std::string& var) const;
 	bool IsCorrectIdentifierName(const std::string& varName) const;
 	
+	bool AssignValue(const std::string& lIdentifier, const std::string& rIdentifier);
+	void UpdateFunctionsVals();
 	void RecalculateFnValue(Function& fn);
 	double CalculateTwoOpFnValue(Function& fn);
 
 private:
 	FunctionsMap m_functions;
 	VariablesMap m_variables;
+	FunctionsOrder m_functionsOrder;
 };

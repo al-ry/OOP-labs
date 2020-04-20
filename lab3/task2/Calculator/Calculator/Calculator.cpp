@@ -40,6 +40,35 @@ FunctionsMap CCalculator::GetFunctions() const
 	return m_functions;
 }
 
+void CCalculator::UpdateFunctionsVals()
+{
+	for (auto& fnName : m_functionsOrder)
+	{
+		Function& fn = m_functions.at(fnName);
+		RecalculateFnValue(fn);
+	}
+}
+
+bool CCalculator::AssignValue(const std::string& lIdentifier, const std::string& rIdentifier)
+{
+	m_variables.at(lIdentifier) = GetVarValue(rIdentifier);
+	char* pEnd = nullptr;
+	strtod(rIdentifier.c_str(), &pEnd);
+	if (!IsVarExist(rIdentifier))
+	{
+		if (*pEnd == '\0')
+		{
+			m_variables.at(lIdentifier) = atof(rIdentifier.c_str());
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 bool CCalculator::AssignValueToVariable(const std::string& lIdentifier, const std::string& rIdentifier)
 {
 	if (rIdentifier.empty())
@@ -54,28 +83,17 @@ bool CCalculator::AssignValueToVariable(const std::string& lIdentifier, const st
 		}
 	}
 
-	m_variables.at(lIdentifier) = GetVariableValue(rIdentifier);
-	char* pEnd = nullptr; 
-	strtod(rIdentifier.c_str(), &pEnd);
-	if (*pEnd == '\0')
+	if (!AssignValue(lIdentifier, rIdentifier))
 	{
-		m_variables.at(lIdentifier) = atof(rIdentifier.c_str());
+		return false;
 	}
 
-
-	for (auto &fn: m_functions)
-	{
-		if (fn.second.firstOp == lIdentifier || fn.second.secondOp == lIdentifier)
-		{
-			RecalculateFnValue(fn.second);
-		}
-	}
-
+	UpdateFunctionsVals();
 
 	return true;
 }
 
-double CCalculator::GetVariableValue(const std::string& varName) const
+double CCalculator::GetVarValue(const std::string& varName) const
 {
 	if (IsVarExist(varName))
 	{
@@ -103,8 +121,9 @@ bool CCalculator::MakeFunction(const std::string& fn, const std::string& var)
 	
 	Function fun;
 	fun.firstOp = var;
-	fun.val = GetVariableValue(var);
+	fun.val = GetVarValue(var);
 	m_functions.emplace(fn, fun);	
+	m_functionsOrder.emplace_back(fn);
 	return true;
 }
 
@@ -127,6 +146,7 @@ bool CCalculator::MakeFunction(const std::string& fn, const std::string& firstOp
 	fun.operatorType = op;
 	fun.val = CalculateTwoOpFnValue(fun);
 	m_functions.emplace(fn, fun);
+	m_functionsOrder.emplace_back(fn);
 	return true;
 }
 
@@ -140,7 +160,7 @@ double CCalculator::CalculateTwoOpFnValue(Function& fn)
 	}
 	else
 	{
-		fVal = GetVariableValue(fn.firstOp);
+		fVal = GetVarValue(fn.firstOp);
 	}
 	if (IsFnExist(fn.secondOp))
 	{
@@ -148,7 +168,7 @@ double CCalculator::CalculateTwoOpFnValue(Function& fn)
 	}
 	else
 	{
-		sVal = GetVariableValue(fn.secondOp);
+		sVal = GetVarValue(fn.secondOp);
 	}
 	switch (fn.operatorType)
 	{
@@ -168,14 +188,13 @@ double CCalculator::CalculateTwoOpFnValue(Function& fn)
 
 	return fn.val;
 		
-	
 }
 
 void CCalculator::RecalculateFnValue(Function &fn)
 {
 	if (fn.secondOp.empty())
 	{
-		fn.val = GetVariableValue(fn.firstOp);
+		fn.val = GetVarValue(fn.firstOp);
 	}
 	else
 	{

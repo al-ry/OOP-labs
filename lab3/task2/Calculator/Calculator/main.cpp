@@ -5,14 +5,9 @@ int main()
 {
 	CCalculator calc;
 
-
-	calc.AssignValueToVariable("y", "100");
-	calc.AssignValueToVariable("x", "100");
-
-
-	calc.MakeFunction("SumXYFn", "y", Operator::ADDITION, "x");//200
-	calc.MakeFunction("fnQ", "y", Operator::ADDITION, "SumXYFn");//300
-	calc.AssignValueToVariable("y", "0");
-	calc.MakeFunction("fnP", "SumXYFn", Operator::ADDITION, "SumXYFn");
+    calc.AssignValueToVariable("x", "55.55");
+	calc.AssignValueToVariable("y", "-100");
+	calc.AssignValueToVariable("x", "y");
+    calc.AssignValueToVariable("x", "hg5hello");
 	return 0;
 }
