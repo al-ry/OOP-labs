@@ -1,9 +1,30 @@
 #include "stdafx.h"
 #include "Calculator.h"
 
+namespace
+{
+	bool IsCharCorrect(char ch)
+	{
+		if (isascii(ch))
+		{
+			return std::isdigit(ch) || std::isalpha(ch) || ch == '_';
+		}
+		return false;
+	}
+	bool IsFirstSymbolNumber(char ch)
+	{
+		if(isascii(ch))
+		{
+			return std::isdigit(ch);
+		}
+		return false;
+	}
+}
+
 bool CCalculator::IsCorrectIdentifierName(const std::string& varName) const
 {
-	if (varName.empty() || std::isdigit(*(varName.begin())))
+	if (varName.empty() || IsFirstSymbolNumber(*varName.begin()) 
+		|| !std::all_of(varName.begin(), varName.end(), IsCharCorrect))
 	{
 		return false;
 	}
@@ -51,10 +72,24 @@ void CCalculator::UpdateFunctionsVals()
 
 bool CCalculator::AssignValue(const std::string& lIdentifier, const std::string& rIdentifier)
 {
-	m_variables.at(lIdentifier) = GetVarValue(rIdentifier);
+	double varVal = GetVarValue(rIdentifier);
+	double fnVal = GetFnValue(rIdentifier);
+	if (!std::isnan(varVal))
+	{
+		m_variables.at(lIdentifier) = GetVarValue(rIdentifier);
+	}
+	else if (!std::isnan(fnVal))
+	{
+		m_variables.at(lIdentifier) = GetFnValue(rIdentifier);
+	}
+	else
+	{
+		m_variables.at(lIdentifier) = NAN;
+	}
+
 	char* pEnd = nullptr;
 	strtod(rIdentifier.c_str(), &pEnd);
-	if (!IsVarExist(rIdentifier))
+	if (!IsVarExist(rIdentifier) && !IsFnExist(rIdentifier))
 	{
 		if (*pEnd == '\0')
 		{
@@ -62,10 +97,10 @@ bool CCalculator::AssignValue(const std::string& lIdentifier, const std::string&
 		}
 		else
 		{
+			m_variables.erase(lIdentifier);
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -185,9 +220,7 @@ double CCalculator::CalculateTwoOpFnValue(Function& fn)
 		fn.val = fVal * sVal;
 		break;
 	}
-
-	return fn.val;
-		
+	return fn.val;	
 }
 
 void CCalculator::RecalculateFnValue(Function &fn)

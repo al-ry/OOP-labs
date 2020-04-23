@@ -78,9 +78,8 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 		BOOST_AUTO_TEST_CASE(cant_assign_value_to_var_when_right_id_arent_either_number_or_another_var)
 		{
 			calculator.AssignValueToVariable("x", "hg5hello");
-			calculator.DeclareVariable("f");
 			auto varList = calculator.GetVariables();
-			BOOST_CHECK(std::isnan(varList.at("f")));
+			BOOST_CHECK(varList.find("x") == varList.end());
 		};
 		BOOST_AUTO_TEST_CASE(can_assign_value_to_var_via_other_var)
 		{
@@ -152,6 +151,11 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 				calculator.AssignValueToVariable("y", "x");
 				BOOST_CHECK_EQUAL(calculator.GetFnValue("fnR"), 30);
 			};
+			BOOST_AUTO_TEST_CASE(can_make_function_when_one_of_var_has_nan_value)
+			{
+				calculator.DeclareVariable("z");
+				BOOST_CHECK(calculator.MakeFunction("sumZY", "y", Operator::ADDITION, "z"));
+			};
 			BOOST_AUTO_TEST_CASE(can_make_function_with_two_operands)
 			{
 				BOOST_CHECK(calculator.MakeFunction("SumXYFn", "y", Operator::ADDITION, "x"));
@@ -164,9 +168,9 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 			};
 			BOOST_AUTO_TEST_CASE(can_make_function_with_function_operand)
 			{
-				BOOST_CHECK(calculator.MakeFunction("FnX+Y", "y", Operator::ADDITION, "x"));
-				BOOST_CHECK(calculator.MakeFunction("FnX+SumXY", "x", Operator::ADDITION, "FnX+Y"));
-				BOOST_CHECK(calculator.MakeFunction("FnSumXY+SumXY", "FnX+Y", Operator::ADDITION, "FnX+Y"));
+				BOOST_CHECK(calculator.MakeFunction("FnX_Y", "y", Operator::ADDITION, "x"));
+				BOOST_CHECK(calculator.MakeFunction("FnX_SumXY", "x", Operator::ADDITION, "FnX_Y"));
+				BOOST_CHECK(calculator.MakeFunction("FnSumXY_SumXY", "FnX_Y", Operator::ADDITION, "FnX_Y"));
 			};
 			BOOST_AUTO_TEST_CASE(can_get_function_value_after_making)
 			{
@@ -182,7 +186,7 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 		when_there_are_functions_()
 		{
 			calculator.MakeFunction("XVal", "x");
-			calculator.MakeFunction("Sum(x+y)", "x", Operator::ADDITION, "y");
+			calculator.MakeFunction("Sum_XY", "x", Operator::ADDITION, "y");
 		}
 	};
 
@@ -190,14 +194,18 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 		BOOST_AUTO_TEST_SUITE(Test_MakeFunction)
 			BOOST_AUTO_TEST_CASE(can_get_fn_value)
 			{
-				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum(x+y)"), 80);
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum_XY"), 80);
 			};
-			
+			BOOST_AUTO_TEST_CASE(can_assign_fn_value_to_variable)
+			{
+				BOOST_CHECK(calculator.AssignValueToVariable("x", "Sum_XY"));
+				BOOST_CHECK_EQUAL(calculator.GetVarValue("x"), 80);
+			};
 			BOOST_AUTO_TEST_CASE(can_get_fn_value_when_one_operand_is_fn)
 			{
-				calculator.MakeFunction("Sum(x+y)-y", "Sum(x+y)", Operator::SUBTRACTION, "y");
+				calculator.MakeFunction("Sum_XY_Minus_Y", "Sum_XY", Operator::SUBTRACTION, "y");
 				double res = calculator.GetVarValue("x");
-				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum(x+y)-y"), res);
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum_XY_Minus_Y"), res);
 			};
 			BOOST_AUTO_TEST_CASE(should_change_fn_value_when_changes_member_of_fn)
 			{
@@ -208,21 +216,18 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 			{
 				calculator.AssignValueToVariable("x", "100");
 				calculator.AssignValueToVariable("y", "100");
-				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum(x+y)"), 200);
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum_XY"), 200);
 			};
 			BOOST_AUTO_TEST_CASE(after_changing_vars_and_substract_two_fn_which_contains_these_vars_should_change_both_fns_val)
 			{
 				calculator.AssignValueToVariable("x", "100");
 				calculator.AssignValueToVariable("y", "100");
-				calculator.MakeFunction("Sum(x+y)-XVal", "Sum(x+y)", Operator::SUBTRACTION, "XVal");
-				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum(x+y)-XVal"), 100);
+				calculator.MakeFunction("Sum_XYMinus_XVal", "Sum_XY", Operator::SUBTRACTION, "XVal");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("Sum_XYMinus_XVal"), 100);
 			};
 
 		BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE_END()
-
-
-	
 
 	struct when_there_is_Fibonacci_sequence_ : CalculatorFixture
 	{
@@ -272,6 +277,5 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 			BOOST_CHECK_EQUAL(calculator.GetFnValue("fib5"), 8);
 			BOOST_CHECK_EQUAL(calculator.GetFnValue("fib6"), 13);
 		}
-	BOOST_AUTO_TEST_SUITE_END()
-		
+	BOOST_AUTO_TEST_SUITE_END()		
 BOOST_AUTO_TEST_SUITE_END()

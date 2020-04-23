@@ -1,8 +1,5 @@
 #pragma once
 
-#include <map>
-#include <string>
-#include<queue>
 
 enum class Operator
 {
@@ -12,14 +9,6 @@ enum class Operator
 	MULTIPLICATION
 };
 
-
-//const std::map<std::string, Operator> OPERATORS_MAP
-//{
-//	{"+", Operator::ADDITION},
-//	{"-", Operator::SUBTRACTION},
-//	{"/", Operator::DIVISION },
-//	{"*", Operator::MULTIPLICATION}
-//};
 struct Function
 {
 	std::string firstOp;

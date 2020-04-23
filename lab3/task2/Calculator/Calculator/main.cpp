@@ -1,13 +1,22 @@
 #include "stdafx.h"
 #include "Calculator.h"
+#include "CalculatorHandler.h"
+
+using namespace std;
 
 int main()
 {
 	CCalculator calc;
+	CCalculatorHandler calculatorHandler(calc, cin, cout);
 
-    calc.AssignValueToVariable("x", "55.55");
-	calc.AssignValueToVariable("y", "-100");
-	calc.AssignValueToVariable("x", "y");
-    calc.AssignValueToVariable("x", "hg5hello");
+	while (!cin.eof() && !cin.fail())
+	{
+		cout << "> ";
+		if (!calculatorHandler.HandleCommand())
+		{
+			cout << "Unknown command!" << endl;
+		}
+	}
+
 	return 0;
 }
