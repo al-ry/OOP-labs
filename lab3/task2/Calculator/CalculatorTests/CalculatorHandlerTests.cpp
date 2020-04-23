@@ -4,8 +4,7 @@
 #include <boost/optional.hpp>
 
 using namespace std;
-using boost::none;
-using boost::optional;
+
 
 struct CalculatorHandlerDependencies
 {
