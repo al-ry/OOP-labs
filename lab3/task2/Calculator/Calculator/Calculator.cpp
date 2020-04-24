@@ -3,27 +3,27 @@
 
 namespace
 {
-	bool IsCharCorrect(char ch)
+bool IsCharCorrect(char ch)
+{
+	if (isascii(ch))
 	{
-		if (isascii(ch))
-		{
-			return std::isdigit(ch) || std::isalpha(ch) || ch == '_';
-		}
-		return false;
+		return std::isdigit(ch) || std::isalpha(ch) || ch == '_';
 	}
-	bool IsFirstSymbolNumber(char ch)
-	{
-		if(isascii(ch))
-		{
-			return std::isdigit(ch);
-		}
-		return false;
-	}
+	return false;
 }
+bool IsFirstSymbolNumber(char ch)
+{
+	if (isascii(ch))
+	{
+		return std::isdigit(ch);
+	}
+	return false;
+}
+} // namespace
 
 bool CCalculator::IsCorrectIdentifierName(const std::string& varName) const
 {
-	if (varName.empty() || IsFirstSymbolNumber(*varName.begin()) 
+	if (varName.empty() || IsFirstSymbolNumber(*varName.begin())
 		|| !std::all_of(varName.begin(), varName.end(), IsCharCorrect))
 	{
 		return false;
@@ -56,7 +56,7 @@ VariablesMap CCalculator::GetVariables() const
 	return m_variables;
 }
 
-FunctionsMap CCalculator::GetFunctions() const 
+FunctionsMap CCalculator::GetFunctions() const
 {
 	return m_functions;
 }
@@ -141,11 +141,10 @@ double CCalculator::GetFnValue(const std::string& fnName) const
 {
 	if (IsFnExist(fnName))
 	{
-		return m_functions.at(fnName).val;						
+		return m_functions.at(fnName).val;
 	}
 	return NAN;
-}		
-
+}
 
 bool CCalculator::MakeFunction(const std::string& fn, const std::string& var)
 {
@@ -153,11 +152,11 @@ bool CCalculator::MakeFunction(const std::string& fn, const std::string& var)
 	{
 		return false;
 	}
-	
+
 	Function fun;
 	fun.firstOp = var;
 	fun.val = GetVarValue(var);
-	m_functions.emplace(fn, fun);	
+	m_functions.emplace(fn, fun);
 	m_functionsOrder.emplace_back(fn);
 	return true;
 }
@@ -165,9 +164,9 @@ bool CCalculator::MakeFunction(const std::string& fn, const std::string& var)
 bool CCalculator::MakeFunction(const std::string& fn, const std::string& firstOp,
 	Operator op, const std::string& secondOp)
 {
-	if (IsVarExist(fn) 
-		|| IsFnExist(fn) 
-		|| !(IsVarExist(firstOp) || IsFnExist(firstOp)) 
+	if (IsVarExist(fn)
+		|| IsFnExist(fn)
+		|| !(IsVarExist(firstOp) || IsFnExist(firstOp))
 		|| !(IsVarExist(secondOp) || IsFnExist(secondOp))
 		|| !IsCorrectIdentifierName(fn))
 
@@ -220,10 +219,10 @@ double CCalculator::CalculateTwoOpFnValue(Function& fn)
 		fn.val = fVal * sVal;
 		break;
 	}
-	return fn.val;	
+	return fn.val;
 }
 
-void CCalculator::RecalculateFnValue(Function &fn)
+void CCalculator::RecalculateFnValue(Function& fn)
 {
 	if (fn.secondOp.empty())
 	{

@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 struct CalculatorHandlerDependencies
 {
 	CCalculator calculator;

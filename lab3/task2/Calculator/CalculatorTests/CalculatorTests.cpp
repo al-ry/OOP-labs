@@ -30,6 +30,12 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 		
 			BOOST_CHECK_EQUAL(res, false);
 		}
+		BOOST_AUTO_TEST_CASE(cannot_declare_var_with_symbols_which_is_out_of_range_of_ascii_table)
+		{
+			bool res = calculator.DeclareVariable("переменная");
+
+			BOOST_CHECK_EQUAL(res, false);
+		}
 
 		BOOST_AUTO_TEST_CASE(cannot_declare_var_starts_with_digit)
 		{
@@ -74,6 +80,10 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 			calculator.AssignValueToVariable("x", "55.55");
 			auto varList = calculator.GetVariables();
 			BOOST_CHECK_EQUAL(varList.at("x"), 55.55);
+		};
+		BOOST_AUTO_TEST_CASE(cannot_assign_value_to_var_with_wrong_name)
+		{
+			BOOST_CHECK(!calculator.AssignValueToVariable("коронавирус", "55.55"));
 		};
 		BOOST_AUTO_TEST_CASE(cant_assign_value_to_var_when_right_id_arent_either_number_or_another_var)
 		{
@@ -130,7 +140,17 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 			{
 				BOOST_CHECK(!calculator.MakeFunction("x", "y"));
 			};
-
+			BOOST_AUTO_TEST_CASE(can_make_fn_which_mutiply_two_vals)
+			{
+				calculator.MakeFunction("fnXMY", "x", Operator::MULTIPLICATION,"y");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("fnXMY"), 1500);
+			};
+			BOOST_AUTO_TEST_CASE(can_make_fn_which_divide_two_vals)
+			{
+				calculator.AssignValueToVariable("x", "100");
+				calculator.MakeFunction("fnXDivideY", "x", Operator::DIVISION, "y");
+				BOOST_CHECK_EQUAL(calculator.GetFnValue("fnXDivideY"), 2);
+			};
 			BOOST_AUTO_TEST_CASE(cannot_make_function_with_undefined_var_value)
 			{
 				BOOST_CHECK(!calculator.MakeFunction("fnX", "undefined_var"));
