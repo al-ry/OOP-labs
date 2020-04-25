@@ -21,6 +21,11 @@ BOOST_AUTO_TEST_SUITE(ParseURL_function)
 				BOOST_CHECK(port == 80);
 				BOOST_CHECK(document == "docs/document1.html?page=30&lang=en#title");
 			}
+			BOOST_AUTO_TEST_CASE(should_not_parse_unknown_protocol)
+			{
+				string url = "pop3://www.mysite.com/docs/document1.html?page=30&lang=en#title";
+				BOOST_CHECK(!ParseURL(url, protocol, port, host, document));
+			}
 		BOOST_AUTO_TEST_SUITE_END()
 		BOOST_AUTO_TEST_SUITE(when_get_url_with_port)
 			BOOST_AUTO_TEST_CASE(should_parse_url_with_corresponding_port)
