@@ -33,7 +33,7 @@ bool CCalculator::IsCorrectIdentifierName(const std::string& varName) const
 
 bool CCalculator::DeclareVariable(const std::string& var)
 {
-	if (IsVarExist(var) || IsFnExist(var) || !IsCorrectIdentifierName(var))
+	if (DoesVarExist(var) || DoesFnExist(var) || !IsCorrectIdentifierName(var))
 	{
 		return false;
 	}
@@ -41,12 +41,12 @@ bool CCalculator::DeclareVariable(const std::string& var)
 	return true;
 }
 
-bool CCalculator::IsVarExist(const std::string& var) const
+bool CCalculator::DoesVarExist(const std::string& var) const
 {
 	return m_variables.find(var) != m_variables.end();
 }
 
-bool CCalculator::IsFnExist(const std::string& fn) const
+bool CCalculator::DoesFnExist(const std::string& fn) const
 {
 	return m_functions.find(fn) != m_functions.end();
 }
@@ -61,7 +61,7 @@ FunctionsMap CCalculator::GetFunctions() const
 	return m_functions;
 }
 
-void CCalculator::UpdateFunctionsVals()
+void CCalculator::RecalculateFunctionVals()
 {
 	for (auto& fnName : m_functionsOrder)
 	{
@@ -89,7 +89,7 @@ bool CCalculator::AssignValue(const std::string& lIdentifier, const std::string&
 
 	char* pEnd = nullptr;
 	strtod(rIdentifier.c_str(), &pEnd);
-	if (!IsVarExist(rIdentifier) && !IsFnExist(rIdentifier))
+	if (!DoesVarExist(rIdentifier) && !DoesFnExist(rIdentifier))
 	{
 		if (*pEnd == '\0')
 		{
@@ -110,7 +110,7 @@ bool CCalculator::AssignValueToVariable(const std::string& lIdentifier, const st
 	{
 		return false;
 	}
-	if (!IsVarExist(lIdentifier))
+	if (!DoesVarExist(lIdentifier))
 	{
 		if (!DeclareVariable(lIdentifier))
 		{
@@ -123,14 +123,14 @@ bool CCalculator::AssignValueToVariable(const std::string& lIdentifier, const st
 		return false;
 	}
 
-	UpdateFunctionsVals();
+	RecalculateFunctionVals();
 
 	return true;
 }
 
 double CCalculator::GetVarValue(const std::string& varName) const
 {
-	if (IsVarExist(varName))
+	if (DoesVarExist(varName))
 	{
 		return m_variables.at(varName);
 	}
@@ -139,7 +139,7 @@ double CCalculator::GetVarValue(const std::string& varName) const
 
 double CCalculator::GetFnValue(const std::string& fnName) const
 {
-	if (IsFnExist(fnName))
+	if (DoesFnExist(fnName))
 	{
 		return m_functions.at(fnName).val;
 	}
@@ -148,7 +148,7 @@ double CCalculator::GetFnValue(const std::string& fnName) const
 
 bool CCalculator::MakeFunction(const std::string& fn, const std::string& var)
 {
-	if (IsFnExist(fn) || !IsCorrectIdentifierName(fn) || !IsVarExist(var) || IsVarExist(fn))
+	if (DoesFnExist(fn) || !IsCorrectIdentifierName(fn) || !DoesVarExist(var) || DoesVarExist(fn))
 	{
 		return false;
 	}
@@ -164,10 +164,10 @@ bool CCalculator::MakeFunction(const std::string& fn, const std::string& var)
 bool CCalculator::MakeFunction(const std::string& fn, const std::string& firstOp,
 	Operator op, const std::string& secondOp)
 {
-	if (IsVarExist(fn)
-		|| IsFnExist(fn)
-		|| !(IsVarExist(firstOp) || IsFnExist(firstOp))
-		|| !(IsVarExist(secondOp) || IsFnExist(secondOp))
+	if (DoesVarExist(fn)
+		|| DoesFnExist(fn)
+		|| !(DoesVarExist(firstOp) || DoesFnExist(firstOp))
+		|| !(DoesVarExist(secondOp) || DoesFnExist(secondOp))
 		|| !IsCorrectIdentifierName(fn))
 
 	{
@@ -188,7 +188,7 @@ double CCalculator::CalculateTwoOpFnValue(Function& fn)
 {
 	double fVal;
 	double sVal;
-	if (IsFnExist(fn.firstOp))
+	if (DoesFnExist(fn.firstOp))
 	{
 		fVal = GetFnValue(fn.firstOp);
 	}
@@ -196,7 +196,7 @@ double CCalculator::CalculateTwoOpFnValue(Function& fn)
 	{
 		fVal = GetVarValue(fn.firstOp);
 	}
-	if (IsFnExist(fn.secondOp))
+	if (DoesFnExist(fn.secondOp))
 	{
 		sVal = GetFnValue(fn.secondOp);
 	}

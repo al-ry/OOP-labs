@@ -38,12 +38,12 @@ public:
 	double GetFnValue(const std::string& fnName) const;
 
 private:
-	bool IsVarExist(const std::string& var) const;
-	bool IsFnExist(const std::string& var) const;
+	bool DoesVarExist(const std::string& var) const;
+	bool DoesFnExist(const std::string& var) const;
 	bool IsCorrectIdentifierName(const std::string& varName) const;
 	
 	bool AssignValue(const std::string& lIdentifier, const std::string& rIdentifier);
-	void UpdateFunctionsVals();
+	void RecalculateFunctionVals();
 	void RecalculateFnValue(Function& fn);
 	double CalculateTwoOpFnValue(Function& fn);
 
