@@ -1,0 +1,17 @@
+triangle 0 -1 1 -0.5 1 0.5 004482 004482
+triangle 1 0.5 -1 -0.5 0 -1 004482 004482
+triangle -1 -0.5 1 0.5 -1 0.5 659ad2 659ad2
+triangle -1 0.5 1 0.5 0 1 659ad2 659ad2
+circle 0 0 0.5 ffffff ffffff
+circle 0 0 0.3 004482 004482
+triangle 0 0 1 0.5 1 -0.5 00599c 00599c
+rectangle 0.48 0.1 0.04 0.2 ffffff ffffff
+rectangle 0.395 0.02 0.2 0.04 ffffff ffffff
+rectangle 0.76 0.1 0.04 0.2 ffffff ffffff
+rectangle 0.68 0.02 0.2 0.04 ffffff ffffff
+line 1 -0.5 1 0.5 ffffff
+line 0 -1 1 -0.5 ffffff
+line -1 -0.5 0 -1 ffffff
+line -1 0.5 0 1 ffffff
+line 0 1 1 0.5 ffffff
+line -1 -0.5 -1 0.5 ffffff
