@@ -122,7 +122,7 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_handler, CalculatorHandlerFixture)
 		{
 			VerifyVarCommand("let var=x", "Cannot assign value to variable\n");
 			auto varList = calculator.GetVariables();
-			BOOST_CHECK(varList.find("var") == varList.end());
+			BOOST_CHECK(varList.find("var") != varList.end());
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 

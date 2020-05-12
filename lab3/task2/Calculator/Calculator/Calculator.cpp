@@ -97,7 +97,6 @@ bool CCalculator::AssignValue(const std::string& lIdentifier, const std::string&
 		}
 		else
 		{
-			m_variables.erase(lIdentifier);
 			return false;
 		}
 	}

@@ -89,7 +89,7 @@ BOOST_FIXTURE_TEST_SUITE(Calculator_, CalculatorFixture)
 		{
 			calculator.AssignValueToVariable("x", "hg5hello");
 			auto varList = calculator.GetVariables();
-			BOOST_CHECK(varList.find("x") == varList.end());
+			BOOST_CHECK(varList.find("x") != varList.end());
 		};
 		BOOST_AUTO_TEST_CASE(can_assign_value_to_var_via_other_var)
 		{
