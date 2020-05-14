@@ -3,7 +3,6 @@
 
 int main(void)
 {
-	CRational rational(0, 3);
-	auto test = rational.ToCompoundFraction();
+	CRational rational;
 	return 0;
 }
