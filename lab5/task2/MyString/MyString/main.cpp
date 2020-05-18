@@ -4,6 +4,7 @@
 
 int main()
 {
-	CMyString myString;
+	CMyString str = "str";
+	char* ch = &str[1];
 	return 0;
 }

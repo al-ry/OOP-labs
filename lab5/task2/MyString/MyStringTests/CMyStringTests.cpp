@@ -159,15 +159,22 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operators, some_strings_for_test_overlo
 			CMyString result = str1 + str2 + str1;
 			VerifyString(result, "str1str2str1", 12);
 		}
-		BOOST_AUTO_TEST_CASE(can_concatenate_with_pointer_to_const_data)
+		BOOST_AUTO_TEST_CASE(can_concatenate_with_pointer_to_const_chars)
 		{
-			CMyString result = str1 + "pChars";
-			VerifyString(result, "str1pChars", 10);
+			const char* chars = "pChars";
+			CMyString result = chars + str1;
+			VerifyString(result, "pCharsstr1", 10);
 		}
-		BOOST_AUTO_TEST_CASE(can_concatenate_few_pointers_to_const_data)
+		BOOST_AUTO_TEST_CASE(can_concatenate_few_pointers_to_const_chars)
 		{
 			CMyString result = str1 + "other" + "other";
 			VerifyString(result, "str1otherother", 14);
+		}
+		BOOST_AUTO_TEST_CASE(can_concatenate_with_stl_string)
+		{
+			std::string string = "stlString";
+			CMyString result = string + str1;
+			VerifyString(result, "stlStringstr1", 13);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
@@ -315,8 +322,10 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operators, some_strings_for_test_overlo
 	BOOST_AUTO_TEST_SUITE(Test_index_operator)
 		BOOST_AUTO_TEST_CASE(can_get_certain_char_from_string)
 		{
-			BOOST_CHECK(str1[2] == 'r');
-
+			const char ch = str1[2];
+			CMyString str = "str";
+			const char ch1 = str[1];
+			BOOST_CHECK(ch == 'r');
 			BOOST_CHECK(str1[0] == 's');
 		}
 		BOOST_AUTO_TEST_CASE(can_change_certain_char_from_string)
@@ -336,7 +345,7 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operators, some_strings_for_test_overlo
 	BOOST_AUTO_TEST_SUITE_END()
 
 	BOOST_AUTO_TEST_SUITE(Test_stream_operator_left_arrows)
-		BOOST_AUTO_TEST_CASE(can_be_written_to_CMyString_from_strean)
+		BOOST_AUTO_TEST_CASE(can_be_written_to_CMyString_from_stream)
 		{
 			std::stringstream strS;
 			CMyString str = "string";

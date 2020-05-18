@@ -27,7 +27,7 @@ private:
 	void CreateString();
 private:
 	char *m_pChars = nullptr;
-	size_t m_length = 0 ;
+	size_t m_length = 0;
 };
 
 CMyString const operator+(const CMyString& lStr, const CMyString& rStr);
