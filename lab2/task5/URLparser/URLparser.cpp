@@ -5,7 +5,7 @@ using namespace std;
 
 const int MAX_PORT = 65535;
 
-const map<Protocol, int> DEFAULT_PORT = {
+const map<Protocol, int> DEFAULT_PORTS = {
 	{ Protocol::HTTP, 80 },
 	{ Protocol::HTTPS, 443 },
 	{ Protocol::FTP, 21 }
@@ -54,7 +54,7 @@ optional<int> ParsePort(const string& portStr, const Protocol& protocol)
 		}
 		return nullopt;
 	}
-	auto defaultProtocol = DEFAULT_PORT.find(protocol);
+	auto defaultProtocol = DEFAULT_PORTS.find(protocol);
 	port = defaultProtocol->second;
 	return port;
 }
