@@ -102,7 +102,7 @@ CMyString& CMyString::operator=(CMyString&& other) noexcept
 {
 	if (&other != this)
 	{
-		Clear();
+		delete[] m_pChars;
 		m_pChars = other.m_pChars;
 		m_length = other.m_length;
 		other.m_pChars = nullptr;

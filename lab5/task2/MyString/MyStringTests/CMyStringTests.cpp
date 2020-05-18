@@ -116,18 +116,16 @@ BOOST_FIXTURE_TEST_SUITE(Test_string_with_some_data, someStrings)
 			str = str;
 			VerifyString(str, "string", 6);
 		}
-		//memory leak
 		BOOST_AUTO_TEST_CASE(can_assign_rvalue)
 		{
 			emptyStr = "rvalue";
 			VerifyString(emptyStr, "rvalue", 6);
 		}
-		//memory leak
 		BOOST_AUTO_TEST_CASE(can_assign_stl_str)
 		{
 			std::string stlStr = "stlStr";
-			str = stlStr;
-			VerifyString(str, "stlStr", 6);
+			emptyStr = stlStr;
+			VerifyString(emptyStr , "stlStr", stlStr.length());
 		}
 		BOOST_AUTO_TEST_CASE(can_assign_other_str_to_source_str)
 		{
@@ -329,13 +327,11 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operators, some_strings_for_test_overlo
 	BOOST_AUTO_TEST_SUITE_END()
 
 	BOOST_AUTO_TEST_SUITE(Test_stream_operator_right_arrows)
-		//memory leak
 		BOOST_AUTO_TEST_CASE(can_be_read_from_stream)
 		{
 			std::stringstream strS("someString");
-			CMyString str;
-			strS >> str;
-			VerifyString(str, "someString", 10);
+			strS >> str1;
+			VerifyString(str1, "someString", 10);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 

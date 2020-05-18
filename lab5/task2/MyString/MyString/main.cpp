@@ -4,6 +4,6 @@
 
 int main()
 {
-	CMyString string;
+	CMyString myString;
 	return 0;
 }
