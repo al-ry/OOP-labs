@@ -67,22 +67,22 @@ bool ParseURL(string const& url, Protocol& protocol, int& port, string& host, st
 	{
 		return false;
 	}
-	auto protocolOpt = ParseProtocol(match[1]);
-	if (!protocolOpt)
+	auto isProtocolCorrect = ParseProtocol(match[1]);
+	if (!isProtocolCorrect)
 	{
 		cout << "Unknown protocol: " << match[1] << endl;
 		return false;
 	}
-	protocol = protocolOpt.value();
+	protocol = isProtocolCorrect.value();
 	host = match[2];
-	auto portOpt = ParsePort(match[3], protocol);
-	if (!portOpt)
+	auto isPortCorrect = ParsePort(match[3], protocol);
+	if (!isPortCorrect)
 	{
 		cout << "Unknown port: " << match[3] << endl;
 		cout << "Port should be in range: 1 <= port >= " << MAX_PORT << endl;
 		return false;
 	}
-	port = portOpt.value();
+	port = isPortCorrect.value();
 	document = match[4];
 
 	return true;
