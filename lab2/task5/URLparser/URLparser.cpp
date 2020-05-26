@@ -11,7 +11,7 @@ const map<Protocol, int> DEFAULT_PORTS = {
 	{ Protocol::FTP, 21 }
 };
 
-optional<Protocol> ParseProtocol(const string& protocolStr)
+optional<Protocol> GetProtocol(const string& protocolStr)
 {
 	Protocol protocol;
 	string lowerCaseProtocol = protocolStr;
@@ -34,7 +34,7 @@ optional<Protocol> ParseProtocol(const string& protocolStr)
 	}
 }
 
-optional<int> ParsePort(const string& portStr, const Protocol& protocol)
+optional<int> GetPort(const string& portStr, const Protocol& protocol)
 {
 	int port;
 	if (portStr.size())
@@ -67,7 +67,7 @@ bool ParseURL(string const& url, Protocol& protocol, int& port, string& host, st
 	{
 		return false;
 	}
-	auto isProtocolCorrect = ParseProtocol(match[1]);
+	auto isProtocolCorrect = GetProtocol(match[1]);
 	if (!isProtocolCorrect)
 	{
 		cout << "Unknown protocol: " << match[1] << endl;
@@ -75,7 +75,7 @@ bool ParseURL(string const& url, Protocol& protocol, int& port, string& host, st
 	}
 	protocol = isProtocolCorrect.value();
 	host = match[2];
-	auto isPortCorrect = ParsePort(match[3], protocol);
+	auto isPortCorrect = GetPort(match[3], protocol);
 	if (!isPortCorrect)
 	{
 		cout << "Unknown port: " << match[3] << endl;
