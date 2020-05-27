@@ -33,7 +33,7 @@ int main()
 			CHttpUrl url(inputStr);
 			PrintUrlInfo(url);
 		}
-		catch (std::invalid_argument& err)
+		catch (CUrlParsingError& err)
 		{
 			std::cout << err.what() << std::endl;
 		}
