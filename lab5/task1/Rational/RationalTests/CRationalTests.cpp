@@ -66,11 +66,11 @@ BOOST_AUTO_TEST_SUITE_END()
 
 struct some_rational_numbers
 {
-	CRational num1;
-	CRational num2;
+	CRational fiveSecond;
+	CRational threeFifths;
 	some_rational_numbers()
-		: num1(5, 2)
-		, num2(3, 5){};
+		: fiveSecond(5, 2)
+		, threeFifths(3, 5){};
 };
 
 
@@ -78,12 +78,12 @@ struct some_rational_numbers
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_binary_minus_operator, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(overloaded_minus_should_add_two_rational_numbers)
 	{
-		CRational res = num1 - num2;
+		CRational res = fiveSecond - threeFifths;
 		VerifyNumeratorAndDenumerator(res, 19, 10);
 	}
 	BOOST_AUTO_TEST_CASE(when_one_operand_is_integer_should_substract_nums)
 	{
-		CRational res = num1 - 1;
+		CRational res = fiveSecond - 1;
 		VerifyNumeratorAndDenumerator(res, 3, 2);
 	}
 BOOST_AUTO_TEST_SUITE_END()
@@ -92,12 +92,12 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_binary_star_operator, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(overloaded_star_should_multiply_two_rational_numbers)
 	{
-		CRational res = num1 * num2;
+		CRational res = fiveSecond * threeFifths;
 		VerifyNumeratorAndDenumerator(res, 3, 2);
 	}
 	BOOST_AUTO_TEST_CASE(when_one_operand_is_integer_should_multiply_two_numbers)
 	{
-		CRational res = num1 * 10;
+		CRational res = fiveSecond * 10;
 		VerifyNumeratorAndDenumerator(res, 25, 1);
 	}
 BOOST_AUTO_TEST_SUITE_END()
@@ -105,12 +105,12 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_binary_slash_operator, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(overloaded_slash_should_divide_two_rational_numbers)
 	{
-		CRational res = num1 / num2;
+		CRational res = fiveSecond / threeFifths;
 		VerifyNumeratorAndDenumerator(res, 25, 6);
 	}
 	BOOST_AUTO_TEST_CASE(when_one_operand_is_integer_should_divide_two_numbers)
 	{
-		CRational res = num1 / 2;
+		CRational res = fiveSecond / 2;
 		VerifyNumeratorAndDenumerator(res, 5, 4);
 	}
 BOOST_AUTO_TEST_SUITE_END()
@@ -118,12 +118,12 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_binary_plus, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(overloaded_plus_should_add_two_rational_numbers)
 	{
-		CRational res = num1 + num2;
+		CRational res = fiveSecond + threeFifths;
 		VerifyNumeratorAndDenumerator(res, 31, 10);
 	}
 	BOOST_AUTO_TEST_CASE(when_one_operand_is_integer_should_add_nums)
 	{
-		CRational res = num1 + 1;
+		CRational res = fiveSecond + 1;
 		VerifyNumeratorAndDenumerator(res, 7, 2);
 	}
 BOOST_AUTO_TEST_SUITE_END()
@@ -132,52 +132,52 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operator_plus_equal, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(when_assign_two_rational_nums_should_assign_value_to_num)
 	{
-		num1 += num2;
-		VerifyNumeratorAndDenumerator(num1, 31, 10);
+		fiveSecond += threeFifths;
+		VerifyNumeratorAndDenumerator(fiveSecond, 31, 10);
 	}
 	BOOST_AUTO_TEST_CASE(when_right_num_is_int_should_assign_value_to_num)
 	{
-		num1 += 5;
-		VerifyNumeratorAndDenumerator(num1, 15, 2);
+		fiveSecond += 5;
+		VerifyNumeratorAndDenumerator(fiveSecond, 15, 2);
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operator_minus_equal, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(when_assign_two_rational_nums_should_assign_value_to_num)
 	{
-		num1 -= num2;
-		VerifyNumeratorAndDenumerator(num1, 19, 10);
+		fiveSecond -= threeFifths;
+		VerifyNumeratorAndDenumerator(fiveSecond, 19, 10);
 	}
 	BOOST_AUTO_TEST_CASE(when_right_num_is_int_should_assign_value_to_num)
 	{
-		num1 -= 1;
-		VerifyNumeratorAndDenumerator(num1, 3, 2);
+		fiveSecond -= 1;
+		VerifyNumeratorAndDenumerator(fiveSecond, 3, 2);
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operator_slash_equal, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(when_assign_two_rational_nums_should_assign_value_to_num)
 	{
-		num1 /= num2;
-		VerifyNumeratorAndDenumerator(num1, 25, 6);
+		fiveSecond /= threeFifths;
+		VerifyNumeratorAndDenumerator(fiveSecond, 25, 6);
 	}
 	BOOST_AUTO_TEST_CASE(when_right_num_is_int_should_assign_value_to_num)
 	{
-		num1 /= 10;
-		VerifyNumeratorAndDenumerator(num1, 1, 4);
+		fiveSecond /= 10;
+		VerifyNumeratorAndDenumerator(fiveSecond, 1, 4);
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operator_star_equal, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(when_assign_two_rational_nums_should_assign_value_to_num)
 	{
-		num1 *= num2;
-		VerifyNumeratorAndDenumerator(num1, 3, 2);
+		fiveSecond *= threeFifths;
+		VerifyNumeratorAndDenumerator(fiveSecond, 3, 2);
 	}
 	BOOST_AUTO_TEST_CASE(when_right_num_is_int_should_assign_value_to_num)
 	{
-		num1 *= 2;
-		VerifyNumeratorAndDenumerator(num1, 5, 1);
+		fiveSecond *= 2;
+		VerifyNumeratorAndDenumerator(fiveSecond, 5, 1);
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
@@ -185,7 +185,7 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_equal_operator, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(should_compare_equals_values)
 	{
 		CRational comparedNum(5, 2);
-		BOOST_CHECK(num1 == comparedNum);
+		BOOST_CHECK(fiveSecond == comparedNum);
 	}
 	BOOST_AUTO_TEST_CASE(when_rvalue_is_integer_should_compare_equals_values)
 	{
@@ -194,59 +194,59 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_equal_operator, some_rational_numbers)
 	}
 	BOOST_AUTO_TEST_CASE(should_compare_not_equals_values)
 	{
-		BOOST_CHECK(!(num1 == num2));
+		BOOST_CHECK(!(fiveSecond == threeFifths));
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_not_equal_operator, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(should_compare_not_equals_values)
 	{
-		BOOST_CHECK(num1 != num2);
+		BOOST_CHECK(fiveSecond != threeFifths);
 	}
 	BOOST_AUTO_TEST_CASE(when_rvalue_is_integer_should_compare_equals_values)
 	{
-		BOOST_CHECK(num1 != 5);
+		BOOST_CHECK(fiveSecond != 5);
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_comparasion_operator_less_than, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(when_both_op_are_rational_nums_should_compare_values)
 	{
-		BOOST_CHECK(num2 < num1);
+		BOOST_CHECK(threeFifths < fiveSecond);
 	}
 	BOOST_AUTO_TEST_CASE(when_lvalue_is_int_should_compare_values)
 	{
-		BOOST_CHECK(1 < num1);
+		BOOST_CHECK(1 < fiveSecond);
 	}
 	BOOST_AUTO_TEST_CASE(when_rvalue_is_int_should_compare_values)
 	{
-		BOOST_CHECK(num2 < 1);
+		BOOST_CHECK(threeFifths < 1);
 	}
 	BOOST_AUTO_TEST_CASE(when_values_equal_should_compare_values)
 	{
 		CRational num(3, 5);
-		BOOST_CHECK(!(num <num2));
+		BOOST_CHECK(!(num <threeFifths));
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_comparasion_operator_less_than_or_equal_to, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(when_both_op_are_rational_nums_should_compare_values)
 	{
-		BOOST_CHECK(num2 <= num1);
+		BOOST_CHECK(threeFifths <= fiveSecond);
 	}
 	BOOST_AUTO_TEST_CASE(when_lvalue_is_int_should_compare_values)
 	{
-		BOOST_CHECK(1 <= num1);
+		BOOST_CHECK(1 <= fiveSecond);
 	}
 	BOOST_AUTO_TEST_CASE(when_rvalue_is_int_should_compare_values)
 	{
-		BOOST_CHECK(num2 <= 1);
+		BOOST_CHECK(threeFifths <= 1);
 	}
 	BOOST_AUTO_TEST_CASE(when_values_equal_should_compare_values)
 	{
 		CRational num(5, 2);
-		BOOST_CHECK(num1 <= num);
-		BOOST_CHECK(num <= num1);
+		BOOST_CHECK(fiveSecond <= num);
+		BOOST_CHECK(num <= fiveSecond);
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -254,41 +254,41 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_comparasion_operator_greater_than, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(when_both_op_are_rational_nums_should_compare_values)
 	{
-		BOOST_CHECK(num1 > num2);
+		BOOST_CHECK(fiveSecond > threeFifths);
 	}
 	BOOST_AUTO_TEST_CASE(when_lvalue_is_int_should_compare_values)
 	{
-		BOOST_CHECK(num1 > 1);
+		BOOST_CHECK(fiveSecond > 1);
 	}
 	BOOST_AUTO_TEST_CASE(when_rvalue_is_int_should_compare_values)
 	{
-		BOOST_CHECK(1 > num2);
+		BOOST_CHECK(1 > threeFifths);
 	}
 	BOOST_AUTO_TEST_CASE(when_values_equal_should_compare_values)
 	{
 		CRational num(3, 5);
-		BOOST_CHECK(!(num > num2));
+		BOOST_CHECK(!(num > threeFifths));
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(Test_overloaded_comparasion_operator_greater_than_or_equal_to, some_rational_numbers)
 	BOOST_AUTO_TEST_CASE(when_both_op_are_rational_nums_should_compare_values)
 	{
-		BOOST_CHECK(num1 >= num2);
+		BOOST_CHECK(fiveSecond >= threeFifths);
 	}
 	BOOST_AUTO_TEST_CASE(when_lvalue_is_int_should_compare_values)
 	{
-		BOOST_CHECK(num1 >= 1);
+		BOOST_CHECK(fiveSecond >= 1);
 	}
 	BOOST_AUTO_TEST_CASE(when_rvalue_is_int_should_compare_values)
 	{
-		BOOST_CHECK(1 >= num2);
+		BOOST_CHECK(1 >= threeFifths);
 	}
 	BOOST_AUTO_TEST_CASE(when_values_equal_should_compare_values)
 	{
 		CRational num(5, 2);
-		BOOST_CHECK(num1 >= num);
-		BOOST_CHECK(num >= num1);
+		BOOST_CHECK(fiveSecond >= num);
+		BOOST_CHECK(num >= fiveSecond);
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
@@ -297,7 +297,7 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_stream_operators, some_rational_numbers
 		BOOST_AUTO_TEST_CASE(can_put_rational_num_in_output)
 		{
 			std::stringstream strs;
-			strs << num1;
+			strs << fiveSecond;
 			std::string expecteStr = "5/2";
 			BOOST_CHECK(expecteStr == strs.str());
 		}
@@ -309,14 +309,14 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_stream_operators, some_rational_numbers
 		{
 			std::stringstream strs;
 			strs << "50/2";
-			strs >> num1;
-			VerifyNumeratorAndDenumerator(num1, 25, 1);
+			strs >> fiveSecond;
+			VerifyNumeratorAndDenumerator(fiveSecond, 25, 1);
 		}
 		BOOST_AUTO_TEST_CASE(can_set_fail_bit_when_data_incorrect)
 		{
 			std::stringstream strs;
 			strs << "50//2";
-			strs >> num1;
+			strs >> fiveSecond;
 			BOOST_CHECK(strs.fail());
 		}
 	BOOST_AUTO_TEST_SUITE_END()
