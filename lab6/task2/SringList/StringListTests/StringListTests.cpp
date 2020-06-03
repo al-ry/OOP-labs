@@ -102,7 +102,8 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			}
 			BOOST_AUTO_TEST_CASE(can_get_const_end_iterator)
 			{
-				const auto begin = list.cend();				
+				const auto end = list.cend();	
+				BOOST_CHECK_THROW(*end, std::runtime_error);
 			}
 			BOOST_AUTO_TEST_CASE(can_increase_iterator_to_1)
 			{
