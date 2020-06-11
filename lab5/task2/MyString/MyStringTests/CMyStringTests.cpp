@@ -75,6 +75,10 @@ BOOST_FIXTURE_TEST_SUITE(Test_string_with_some_data, someStrings)
 		BOOST_CHECK_EQUAL(str.GetStringData()[str.GetLength()], '\0');
 	}
 	BOOST_AUTO_TEST_SUITE(Test_SubStr)
+		BOOST_AUTO_TEST_CASE(should_throw_exception_when_out_of_range)
+		{
+			BOOST_REQUIRE_THROW(str.SubString(-5, 80), std::out_of_range);
+		}
 		BOOST_AUTO_TEST_CASE(can_extract_substr_from_zero_pos)
 		{
 			auto res = str.SubString(0, 3);
