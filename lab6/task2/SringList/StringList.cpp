@@ -14,9 +14,45 @@ CStringList::CStringList(CStringList& list)
 	std::swap(m_lastNode, listCopy.m_lastNode);
 }
 
+CStringList::CStringList(CStringList&& list) noexcept
+	: m_size(list.m_size)
+	, m_firstNode(std::move(list.m_firstNode))
+	, m_lastNode(list.m_lastNode)
+{
+	list.m_size = 0u;
+	list.m_firstNode = nullptr;
+	list.m_lastNode = nullptr;
+}
+
 CStringList::~CStringList()
 {
 	Clear();
+}
+
+CStringList CStringList::operator=(CStringList& other)
+{
+	if (&other != this)
+	{
+		CStringList copyOfList(other);
+		this->m_size = copyOfList.GetSize();
+		this->m_firstNode = std::move(copyOfList.m_firstNode);
+		this->m_lastNode = copyOfList.m_lastNode;
+	}
+	return *this;
+}
+
+CStringList CStringList::operator=(CStringList&& other) noexcept
+{
+	if (&other != this)
+	{
+		this->m_size = other.GetSize();
+		this->m_firstNode = std::move(other.m_firstNode);
+		this->m_lastNode = other.m_lastNode;
+		other.m_size = 0u;
+		other.m_firstNode = nullptr;
+		other.m_lastNode = nullptr;
+	}
+	return *this;
 }
 
 size_t CStringList::GetSize() const

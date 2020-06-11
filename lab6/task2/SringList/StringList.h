@@ -8,8 +8,8 @@ class CStringList
 	friend class CIterator;
 	struct Node
 	{
-		Node(const std::string& data, Node* prev, std::unique_ptr<Node>&& next)
-			: data(data)
+		Node(std::string data, Node* prev, std::unique_ptr<Node>&& next)
+			: data(std::move(data))
 			, prev(prev)
 			, next(std::move(next))
 		{
@@ -39,8 +39,11 @@ public:
 	};
 	CStringList() = default;
 	CStringList(CStringList& list);
+	CStringList(CStringList&& list) noexcept;
 	~CStringList();
 
+	CStringList operator=(CStringList& other);
+	CStringList operator=(CStringList&& other) noexcept;
 
 	CIterator begin();
 	CIterator end();

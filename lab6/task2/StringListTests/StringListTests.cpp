@@ -262,6 +262,22 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				CStringList copyOfList(list);
 				auto it = copyOfList.begin();
 				BOOST_CHECK(addressof(*it) != addressof(list.GetBackElement()));
+
+			}
+			BOOST_AUTO_TEST_CASE(can_make_copy_of_list_via_overoloaded_operator)
+			{
+				CStringList copyOfList = list;
+				BOOST_CHECK(copyOfList.GetSize() == 5u);
+				BOOST_CHECK(copyOfList.GetFrontElement() == "1");
+				BOOST_CHECK(copyOfList.GetBackElement() == "5");
+			}
+			BOOST_AUTO_TEST_CASE(can_be_moved)
+			{
+
+				CStringList newList = std::move(list);
+				BOOST_CHECK(newList.GetFrontElement() == "1");
+				BOOST_CHECK(newList.GetBackElement() == "5");
+				BOOST_CHECK(newList.GetSize() == 5u);
 			}
 		BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE_END()

@@ -11,7 +11,8 @@ int main()
 	list.AppendFront("2");
 	list.AppendFront("1");
 
-	for (auto it = list.rbegin(); it != list.rend(); ++it)
+	for (auto it = list.rbegin(); it !=
+		list.rend(); ++it)
 	{
 		std::cout << *it;
 	}
