@@ -14,6 +14,11 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 		{
 			BOOST_CHECK_EQUAL(list.GetSize(), 0u);
 		}
+		BOOST_AUTO_TEST_CASE(can_recieve_end_iterator)
+		{
+			auto it = list.end();
+			BOOST_CHECK_THROW(*it, std::out_of_range);
+		}
 	BOOST_AUTO_TEST_SUITE_END()
 
 		BOOST_AUTO_TEST_SUITE(after_appending_a_string)
@@ -67,7 +72,14 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 		}
 		BOOST_AUTO_TEST_CASE(cant_get_front_element_from_empty_list)
 		{
+
 			BOOST_REQUIRE_THROW(list.GetFrontElement(), std::runtime_error);
+		}
+		BOOST_AUTO_TEST_CASE(cannot_get_const_end_and_front_element)
+		{
+			const CStringList list2;
+			BOOST_CHECK_THROW(list2.GetBackElement(), std::runtime_error);
+			BOOST_CHECK_THROW(list2.GetFrontElement(), std::runtime_error);
 		}
 
 
@@ -77,7 +89,6 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			auto it = list.begin();
 			BOOST_CHECK_EQUAL(addressof(*it), addressof(list.GetBackElement()));
 		}
-
 		struct when_there_are_elements : EmptyStringList
 		{
 			when_there_are_elements()
@@ -103,7 +114,7 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			BOOST_AUTO_TEST_CASE(can_get_const_end_iterator)
 			{
 				const auto end = list.cend();	
-				BOOST_CHECK_THROW(*end, std::runtime_error);
+				BOOST_CHECK_THROW(*end, std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(can_increase_iterator_to_1)
 			{
@@ -114,7 +125,23 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			BOOST_AUTO_TEST_CASE(cannot_get_iterator_when_its_increased_to_out_of_range)
 			{
 				auto end = list.end();
-				BOOST_CHECK_THROW(++end, std::runtime_error);
+				BOOST_CHECK_THROW(++end, std::out_of_range);
+			}
+			BOOST_AUTO_TEST_CASE(can_deacrease_end_iterator)
+			{
+				auto end = list.end();
+				--end;
+				BOOST_CHECK(*end == "5");
+			}
+			BOOST_AUTO_TEST_CASE(cant_deacrease_rbegin_iterator)
+			{
+				auto end = list.rbegin();
+				BOOST_CHECK_THROW(--end, std::out_of_range);
+			}
+			BOOST_AUTO_TEST_CASE(cant_decrease_begin)
+			{
+				auto begin = list.begin();
+				BOOST_CHECK_THROW(--begin, std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(can_be_compared)
 			{
@@ -159,6 +186,13 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				auto it = list2.begin();
 				BOOST_REQUIRE_THROW(list2.Erase(it), std::runtime_error);
 			}
+			BOOST_AUTO_TEST_CASE(cannot_be_erased_from_rbegin_and_end)
+			{
+				auto it = list.end();
+				BOOST_REQUIRE_THROW(list.Erase(it), std::out_of_range);
+				it = list.rend();
+				BOOST_REQUIRE_THROW(list.Erase(it), std::out_of_range);
+			}
 			BOOST_AUTO_TEST_CASE(can_be_erased_from_start_position)
 			{
 				auto it = list.begin();
@@ -202,7 +236,7 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			{
 				CStringList list2;
 				list2.AppendBack("first");
-				auto it = list2.end();
+				auto it = list2.begin();
 				list2.Erase(it);
 				BOOST_CHECK(list2.IsEmpty());
 				BOOST_CHECK_THROW(list2.GetBackElement(), std::runtime_error);
@@ -214,27 +248,34 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				it = list.crbegin();
 				BOOST_CHECK(*it == "5");
 			}
-			BOOST_AUTO_TEST_CASE(cannot_get_out_of_range_element)
+			BOOST_AUTO_TEST_CASE(can_decrease_rend)
 			{
 				auto it = list.rend();
-				BOOST_CHECK_THROW(--it, std::runtime_error);
+				BOOST_CHECK(*--it == "1");
+			}
+			BOOST_AUTO_TEST_CASE(cannot_increase_rend)
+			{
+				auto it = list.rend();
+				BOOST_CHECK_THROW(++it, std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(cannot_get_null_data)
 			{
 				auto it = list.rend();
-				BOOST_CHECK_THROW(*it, std::runtime_error);
+				BOOST_CHECK_THROW(*it, std::out_of_range);
 				it = list.crend();
-				BOOST_CHECK_THROW(*it, std::runtime_error);
+				BOOST_CHECK_THROW(*it, std::out_of_range);
 			}
-			BOOST_AUTO_TEST_CASE(cannot_be_inserted_to_null_position)
+			BOOST_AUTO_TEST_CASE(cannot_be_inserted_to_end_and_rend)
 			{	
-				BOOST_CHECK_THROW(list.Insert("new", list.end()), std::runtime_error);
-				BOOST_CHECK_THROW(list.Insert("new", list.rend()), std::runtime_error);
+				list.Insert("new last", list.end());
+				list.Insert("new first", list.rend());
+				BOOST_CHECK(list.GetFrontElement() == "new first");
+				BOOST_CHECK(list.GetBackElement() == "new last");
 			}
-			BOOST_AUTO_TEST_CASE(cannot_be_erased_from_null_position)
+			BOOST_AUTO_TEST_CASE(can_be_erased_from_end_and_rend_position)
 			{
-				BOOST_CHECK_THROW(list.Erase(list.end()), std::runtime_error);
-				BOOST_CHECK_THROW(list.Erase(list.rend()), std::runtime_error);
+				BOOST_CHECK_THROW(list.Erase(list.end()), std::out_of_range);
+				BOOST_CHECK_THROW(list.Erase(list.rend()), std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(reverse_iterator_can_be_increased)
 			{
@@ -262,7 +303,8 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				CStringList copyOfList(list);
 				auto it = copyOfList.begin();
 				BOOST_CHECK(addressof(*it) != addressof(list.GetBackElement()));
-
+				BOOST_CHECK(*it == "1");
+				BOOST_CHECK(list.GetBackElement() == "5");
 			}
 			BOOST_AUTO_TEST_CASE(can_make_copy_of_list_via_overoloaded_operator)
 			{
@@ -278,6 +320,10 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				BOOST_CHECK(newList.GetFrontElement() == "1");
 				BOOST_CHECK(newList.GetBackElement() == "5");
 				BOOST_CHECK(newList.GetSize() == 5u);
+				CStringList newList2(std::move(newList));
+				BOOST_CHECK(newList2.GetFrontElement() == "1");
+				BOOST_CHECK(newList2.GetBackElement() == "5");
+				BOOST_CHECK(newList2.GetSize() == 5u);
 			}
 		BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE_END()

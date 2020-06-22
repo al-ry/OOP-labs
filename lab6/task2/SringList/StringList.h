@@ -35,9 +35,9 @@ public:
 
 	private:
 		Node* m_node = nullptr;
-		bool m_isReversed = false;
+		bool m_isReversed = false;		
 	};
-	CStringList() = default;
+	CStringList();
 	CStringList(CStringList& list);
 	CStringList(CStringList&& list) noexcept;
 	~CStringList();

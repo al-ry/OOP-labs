@@ -2,16 +2,20 @@
 #include "stdexcept"
 
 
-CStringList::CStringList(CStringList& list)
+CStringList::CStringList()
 {
-	CStringList listCopy;
+	m_firstNode = std::make_unique<Node>("", nullptr, nullptr);
+	m_firstNode->next = std::make_unique<Node>("", m_firstNode.get(), nullptr);
+	m_lastNode = m_firstNode->next.get();
+}
+
+CStringList::CStringList(CStringList& list)
+	: CStringList()
+{
 	for (const auto& elem : list)
 	{
-		listCopy.AppendBack(elem);
+		AppendBack(elem);
 	}
-	m_size = listCopy.GetSize();
-	std::swap(m_firstNode, listCopy.m_firstNode);
-	std::swap(m_lastNode, listCopy.m_lastNode);
 }
 
 CStringList::CStringList(CStringList&& list) noexcept
@@ -27,6 +31,8 @@ CStringList::CStringList(CStringList&& list) noexcept
 CStringList::~CStringList()
 {
 	Clear();
+	m_firstNode = nullptr;
+	m_lastNode = nullptr;
 }
 
 CStringList CStringList::operator=(CStringList& other)
@@ -62,44 +68,20 @@ size_t CStringList::GetSize() const
 
 void CStringList::AppendBack(const std::string& data)
 {
-	auto newNode = std::make_unique<Node>(data, m_lastNode, nullptr);
-	Node* newLastNode = newNode.get();
-	if (m_lastNode)
-	{
-		m_lastNode->next = std::move(newNode);
-	}
-	else
-	{
-		m_firstNode = move(newNode);
-	}
-	m_lastNode = newLastNode;
-	++m_size;
+	Insert(data, end());
 }
 void CStringList::AppendFront(const std::string& data)
 {
-	auto newNode = std::make_unique<Node>(data, nullptr, std::move(m_firstNode));
-	Node* newFrontNode = newNode.get();
-	if (newNode->next)
-	{
-		newNode->next->prev = std::move(newFrontNode);
-	}
-	else
-	{
-		m_lastNode = std::move(newFrontNode);
-	}
-	m_firstNode = std::move(newNode);
-	++m_size;
+
+	Insert(data, begin());
 }
 
 void CStringList::Clear()
 {
-	while (m_lastNode)
+	while (!IsEmpty())
 	{
-		m_lastNode->next = nullptr;
-		m_lastNode = m_lastNode->prev;
+		Erase(begin());
 	}
-	m_firstNode = nullptr;
-	m_size = 0;
 }
 
 bool CStringList::IsEmpty() const
@@ -113,7 +95,7 @@ std::string& CStringList::GetBackElement() const
 	{
 		throw std::runtime_error("Can't get back element from empty list");
 	}
-	return m_lastNode->data;
+	return m_lastNode->next->data;
 }
 
 std::string const& CStringList::GetBackElement()
@@ -122,7 +104,7 @@ std::string const& CStringList::GetBackElement()
 	{
 		throw std::runtime_error("Can't get back element from empty list");
 	}
-	return m_lastNode->data;
+	return m_lastNode->prev->data;
 }
 
 std::string& CStringList::GetFrontElement() const
@@ -131,7 +113,7 @@ std::string& CStringList::GetFrontElement() const
 	{
 		throw std::runtime_error("Can't get front element from empty list");
 	}
-	return m_firstNode->data;
+	return m_firstNode->next->data;
 }
 
 std::string const& CStringList::GetFrontElement()
@@ -140,7 +122,7 @@ std::string const& CStringList::GetFrontElement()
 	{
 		throw std::runtime_error("Can't get front element from empty list");
 	}
-	return m_firstNode->data;
+	return m_firstNode->next->data;
 }
 
 CStringList::CIterator::CIterator(Node* node, bool isReversed = false)
@@ -151,25 +133,29 @@ CStringList::CIterator::CIterator(Node* node, bool isReversed = false)
 
 std::string& CStringList::CIterator::operator*() const
 {
-	if (!m_node)
+	if (!m_node->next || !m_node->prev)
 	{
-		throw std::runtime_error("Cannot provide access to data");
+		throw std::out_of_range("Cannot provide access to data");
 	}
 	return m_node->data;
 }
 
 CStringList::CIterator& CStringList::CIterator::operator++()
 {
-	if (!m_node)
-	{
-		throw std::runtime_error("Cannot provide access to iterator");
-	}
 	if (m_isReversed)
 	{
+		if (!m_node->prev)
+		{
+			throw std::out_of_range("Cannot provide access to iterator");
+		}
 		m_node = m_node->prev;
 	}
 	else
 	{
+		if (!m_node->next)
+		{
+			throw std::out_of_range("Cannot provide access to iterator");
+		}
 		m_node = m_node->next.get();
 	}
 	return *this;
@@ -177,16 +163,20 @@ CStringList::CIterator& CStringList::CIterator::operator++()
 
 CStringList::CIterator& CStringList::CIterator::operator--()
 {
-	if (!m_node)
-	{
-		throw std::runtime_error("Cannot provide access to iterator");
-	}
 	if (m_isReversed)
 	{
+		if (!m_node->next->next)	
+		{
+			throw std::out_of_range("Cannot provide access to iterator");
+		}
 		m_node = m_node->next.get();
 	}
 	else
 	{
+		if (!m_node->prev->prev)
+		{
+			throw std::out_of_range("Cannot provide access to iterator");
+		}
 		m_node = m_node->prev;
 	}
 	return *this;
@@ -203,70 +193,60 @@ bool CStringList::CIterator::operator!=(const CIterator& it) const
 
 CStringList::CIterator CStringList::begin()
 {
-	return CIterator(m_firstNode.get());
+	return CIterator(m_firstNode->next.get());
 }
 
 CStringList::CIterator CStringList::end()
 {
-	return CIterator(m_lastNode->next.get());
+	return CIterator(m_lastNode);
 }
 
 const CStringList::CIterator CStringList::cbegin() const
 {
-	return CIterator(m_firstNode.get());
+	return CIterator(m_firstNode->next.get());
 }
 
 const CStringList::CIterator CStringList::cend() const
 {
-	return CIterator(m_lastNode->next.get());
+	return CIterator(m_lastNode);
 }
 
 CStringList::CIterator CStringList::rbegin()
 {
-	return CIterator(m_lastNode, true);
+	return CIterator(m_lastNode->prev, true);
 }
 
 CStringList::CIterator CStringList::rend()
 {
-	return CIterator(m_firstNode->prev, true);
+	return CIterator(m_firstNode.get(), true);
 }
 
 const CStringList::CIterator CStringList::crbegin() const
 {
-	return CIterator(m_lastNode, true);
+	return CIterator(m_lastNode->prev, true);
 }
 
 const CStringList::CIterator CStringList::crend() const
 {
-	return CIterator(m_firstNode->prev, true);
+	return CIterator(m_firstNode.get(), true);
 }
 
 void CStringList::Insert(const std::string& data, const CIterator& it)
 {
-	if (IsEmpty())
+	if (it == rend())
 	{
 		AppendFront(data);
 		return;
 	}
-	if (!it.m_node)
-	{
-		throw std::runtime_error("Trying to erase element from null position");
-	}
-	if (it == m_firstNode.get())
-	{
-		AppendFront(data);
-	}
-	else if (it == m_lastNode)
+	if (it == rbegin())
 	{
 		AppendBack(data);
+		return;
 	}
-	else
-	{
-		auto newNode = std::make_unique<Node>(data, it.m_node->prev, std::move(it.m_node->prev->next));
-		it.m_node->prev = std::move(newNode.get());
-		it.m_node->prev->prev->next = std::move(newNode);
-		m_size++;
-	}
+	auto newNode = std::make_unique<Node>(data, it.m_node->prev, std::move(it.m_node->prev->next));
+	it.m_node->prev = newNode.get();
+	newNode->prev->next = std::move(newNode);
+	m_size++;
 }
 
 void CStringList::Erase(const CIterator& it)
@@ -275,29 +255,11 @@ void CStringList::Erase(const CIterator& it)
 	{
 		throw std::runtime_error("Cannot be erased from empty list");
 	}
-	if (m_size == 1)
+	if (it == rend() || it == end())
 	{
-		Clear();
-		return;
+		throw std::out_of_range("Cannot be erased from end() and rend() position");
 	}
-	if (!it.m_node)
-	{
-		throw std::runtime_error("Trying to erase element from null position");
-	}
-	if (it == m_firstNode.get()) 
-	{
-		it.m_node->next->prev = nullptr;
-		m_firstNode = std::move(it.m_node->next);
-	}
-	else if (it == m_lastNode)
-	{
-		m_lastNode = m_lastNode->prev;
-		m_lastNode->next = nullptr;
-	}
-	else
-	{
-		it.m_node->next->prev = std::move(it.m_node->prev);
-		it.m_node->prev->next = std::move(it.m_node->next);
-	}
+	it.m_node->next->prev = it.m_node->prev;
+	it.m_node->prev->next = std::move(it.m_node->next);
 	--m_size;
 }

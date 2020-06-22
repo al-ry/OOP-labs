@@ -6,11 +6,15 @@
 int main()
 {
 	CStringList list;
-	list.AppendFront("4");
-	list.AppendFront("3");
-	list.AppendFront("2");
-	list.AppendFront("1");
 
+	list.AppendBack("3");
+	list.AppendBack("2");
+	list.AppendBack("1");
+	list.AppendFront("5");
+	list.AppendFront("6");
+	list.AppendFront("7");
+	list.AppendFront("8");
+	
 	for (auto it = list.rbegin(); it !=
 		list.rend(); ++it)
 	{
