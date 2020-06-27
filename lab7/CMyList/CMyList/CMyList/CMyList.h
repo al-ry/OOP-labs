@@ -162,6 +162,9 @@ inline CMyList<T>::CMyList(CMyList&& list)noexcept
 	std::swap(m_firstNode, list.m_firstNode);
 	std::swap(m_lastNode, list.m_lastNode);
 	std::swap(m_size, list.m_size);
+	list.m_firstNode = nullptr;
+	list.m_lastNode = nullptr;
+	list.m_size = 0;
 }
 
 template <typename T>
@@ -193,6 +196,9 @@ inline CMyList<T> CMyList<T>::operator=(CMyList<T>&& list)
 		std::swap(m_firstNode, list.m_firstNode);
 		std::swap(m_lastNode, list.m_lastNode);
 		std::swap(m_size, list.m_size);
+		list.m_firstNode = nullptr;
+		list.m_lastNode = nullptr;
+		list.m_size = 0;
 	}
 	return *this;
 }
