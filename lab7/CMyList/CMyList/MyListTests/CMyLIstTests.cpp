@@ -228,12 +228,13 @@ BOOST_FIXTURE_TEST_SUITE(Int_list, EmptyIntList)
 		{
 			CMyList<int> copy(list);
 			BOOST_CHECK_NE(std::addressof(copy), std::addressof(list));
+			BOOST_CHECK(*copy.begin() == 1);
 			CMyList<int> copy2 = list;
 			BOOST_CHECK_NE(std::addressof(copy2), std::addressof(list));
+			BOOST_CHECK(*copy2.begin() == 1);
 		}
 		BOOST_AUTO_TEST_CASE(can_be_moved)
 		{
-			auto address = std::addressof(list);
 			CMyList<int> newList(std::move(list));
 			BOOST_CHECK_EQUAL(*newList.begin(), 1);
 			CMyList<int> newList2 = std::move(newList);

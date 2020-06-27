@@ -14,7 +14,7 @@ int main()
 	list.AppendFront("6");
 	list.AppendFront("7");
 	list.AppendFront("8");
-	
+
 	for (auto it = list.rbegin(); it !=
 		list.rend(); ++it)
 	{

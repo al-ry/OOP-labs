@@ -13,5 +13,9 @@ int main()
 	{
 		std::cout << *it;
 	}
+	CMyList<int> list1(list);
+	//CMyList<int> list1 = std::move(list);
+	//CMyList<int> list2(std::move(list1));
+	CMyList<int>list2 = (list1);
 	return 0;
 }

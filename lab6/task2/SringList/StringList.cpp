@@ -23,9 +23,10 @@ CStringList::CStringList(CStringList&& list) noexcept
 	, m_firstNode(std::move(list.m_firstNode))
 	, m_lastNode(list.m_lastNode)
 {
-	list.m_size = 0u;
-	list.m_firstNode = nullptr;
-	list.m_lastNode = nullptr;
+	CStringList tmpList;
+	list.m_firstNode = std::move(tmpList.m_firstNode);
+	list.m_lastNode = tmpList.m_lastNode;
+	list.m_size = tmpList.m_size;
 }
 
 CStringList::~CStringList()
@@ -54,9 +55,10 @@ CStringList CStringList::operator=(CStringList&& other) noexcept
 		this->m_size = other.GetSize();
 		this->m_firstNode = std::move(other.m_firstNode);
 		this->m_lastNode = other.m_lastNode;
-		other.m_size = 0u;
-		other.m_firstNode = nullptr;
-		other.m_lastNode = nullptr;
+		CStringList tmpList;
+		other.m_firstNode = std::move(tmpList.m_firstNode);
+		other.m_lastNode = tmpList.m_lastNode;
+		other.m_size = tmpList.m_size;
 	}
 	return *this;
 }
