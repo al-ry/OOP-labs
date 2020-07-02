@@ -17,7 +17,7 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 		BOOST_AUTO_TEST_CASE(can_recieve_end_iterator)
 		{
 			auto it = list.end();
-			BOOST_CHECK_THROW(*it, std::out_of_range);
+			BOOST_CHECK_THROW(*it, std::runtime_error);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
@@ -114,24 +114,27 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			BOOST_AUTO_TEST_CASE(can_get_const_end_iterator)
 			{
 				const auto end = list.cend();	
-				BOOST_CHECK_THROW(*end, std::out_of_range);
+				BOOST_CHECK_THROW(*end, std::runtime_error);
 			}
 			BOOST_AUTO_TEST_CASE(can_increase_iterator_to_1)
 			{
 				auto it = list.begin();
-				++it;BOOST_CHECK_EQUAL(*it, "2");
-				++it;BOOST_CHECK_EQUAL(*it, "3");	
+				BOOST_CHECK_EQUAL(*++it, "2");
+				BOOST_CHECK_EQUAL(*++it, "3");
+				BOOST_CHECK_EQUAL(*it++, "4");
+				BOOST_CHECK_EQUAL(*it++, "5");	
 			}
 			BOOST_AUTO_TEST_CASE(cannot_get_iterator_when_its_increased_to_out_of_range)
 			{
 				auto end = list.end();
 				BOOST_CHECK_THROW(++end, std::out_of_range);
+				BOOST_CHECK_THROW(end++, std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(can_deacrease_end_iterator)
 			{
 				auto end = list.end();
-				--end;
-				BOOST_CHECK(*end == "5");
+				BOOST_CHECK(*--end == "5");
+				BOOST_CHECK_EQUAL(*end--, "4");
 			}
 			BOOST_AUTO_TEST_CASE(cant_deacrease_rbegin_iterator)
 			{
@@ -142,6 +145,7 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			{
 				auto begin = list.begin();
 				BOOST_CHECK_THROW(--begin, std::out_of_range);
+				BOOST_CHECK_THROW(begin--, std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(can_be_compared)
 			{
@@ -158,14 +162,7 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				BOOST_CHECK(it == ++list.begin());
 				BOOST_CHECK(list.GetSize() == 6u);
 			}
-			BOOST_AUTO_TEST_CASE(can_be_inserted_at_the_end_via_rbegin)
-			{
-				auto it = list.rbegin();
-				list.Insert("new item", it);
-				BOOST_CHECK_EQUAL(list.GetBackElement(), "new item");
-				BOOST_CHECK(list.GetSize() == 6u);
-			}
-			BOOST_AUTO_TEST_CASE(can_be_inserted_to_given_postition)
+			BOOST_AUTO_TEST_CASE(can_be_inserted_to_given_position)
 			{
 				auto it = ++(++list.begin());
 				BOOST_CHECK(*it == "3");
@@ -190,8 +187,6 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			{
 				auto it = list.end();
 				BOOST_REQUIRE_THROW(list.Erase(it), std::out_of_range);
-				it = list.rend();
-				BOOST_REQUIRE_THROW(list.Erase(it), std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(can_be_erased_from_start_position)
 			{
@@ -199,12 +194,6 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				list.Erase(it);
 				it = list.begin();
 				BOOST_REQUIRE(*it == "2");
-			}
-			BOOST_AUTO_TEST_CASE(can_be_erased_from_end_position_via_rbegin)
-			{
-				auto it = list.rbegin();
-				list.Erase(it);
-				BOOST_REQUIRE(list.GetBackElement() == "4");
 			}
 			BOOST_AUTO_TEST_CASE(can_be_erased_from_any_pos)
 			{
@@ -252,11 +241,13 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			{
 				auto it = list.rend();
 				BOOST_CHECK(*--it == "1");
+				BOOST_CHECK(*it-- == "1");
 			}
 			BOOST_AUTO_TEST_CASE(cannot_increase_rend)
 			{
 				auto it = list.rend();
 				BOOST_CHECK_THROW(++it, std::out_of_range);
+				BOOST_CHECK_THROW(it++, std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(cannot_get_null_data)
 			{
@@ -265,23 +256,20 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				it = list.crend();
 				BOOST_CHECK_THROW(*it, std::out_of_range);
 			}
-			BOOST_AUTO_TEST_CASE(cannot_be_inserted_to_end_and_rend)
+			BOOST_AUTO_TEST_CASE(cannot_be_inserted_to_end)
 			{	
 				list.Insert("new last", list.end());
-				list.Insert("new first", list.rend());
-				BOOST_CHECK(list.GetFrontElement() == "new first");
 				BOOST_CHECK(list.GetBackElement() == "new last");
 			}
-			BOOST_AUTO_TEST_CASE(can_be_erased_from_end_and_rend_position)
+			BOOST_AUTO_TEST_CASE(can_be_erased_from_end_position)
 			{
 				BOOST_CHECK_THROW(list.Erase(list.end()), std::out_of_range);
-				BOOST_CHECK_THROW(list.Erase(list.rend()), std::out_of_range);
 			}
 			BOOST_AUTO_TEST_CASE(reverse_iterator_can_be_increased)
 			{
 				auto it = list.rbegin();
-				++it;
-				BOOST_CHECK_EQUAL(*it, "4");
+				BOOST_CHECK_EQUAL(*++it, "4");
+				BOOST_CHECK_EQUAL(*it++, "4");
 			}
 			BOOST_AUTO_TEST_CASE(reverse_iterator_can_be_decreased)
 			{

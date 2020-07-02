@@ -99,22 +99,26 @@ BOOST_FIXTURE_TEST_SUITE(Int_list, EmptyIntList)
 			auto it = list.begin();
 			BOOST_CHECK_EQUAL(*++it, 2);
 			BOOST_CHECK_EQUAL(*++(++it), 4);
+			BOOST_CHECK_EQUAL(*it++, 5);
 		}
 		BOOST_AUTO_TEST_CASE(cannot_increment_end_iterator_to_out_of_range)
 		{
 			auto it = list.end();
 			BOOST_CHECK_THROW(++it, std::out_of_range);
+			BOOST_CHECK_THROW(it++, std::out_of_range);
 		}
 		BOOST_AUTO_TEST_CASE(can_decrement_end_iterator)
 		{
 			auto it = list.end();
 			BOOST_CHECK_EQUAL(*--it, 5);
 			BOOST_CHECK_EQUAL(*--(--it), 3);
+			BOOST_CHECK_EQUAL(*it--, 2);
 		}
 		BOOST_AUTO_TEST_CASE(cannot_decrement_begin_iterator_to_out_of_range)
 		{
 			auto it = list.begin();
 			BOOST_CHECK_THROW(--it, std::out_of_range);
+			BOOST_CHECK_THROW(it--, std::out_of_range);
 		}
 		BOOST_AUTO_TEST_CASE(can_increase_iteratro_and_then_decrease_it_back)
 		{

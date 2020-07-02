@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include "stdexcept"
 
 class CStringList
 {
@@ -19,23 +20,87 @@ class CStringList
 		std::unique_ptr<Node> next;
 	};
 public:
+	template <bool IsConst>
 	class CIterator
 	{
 		friend class CStringList;
-		CIterator(Node* node, bool isReversed);
-
+		friend class CIterator<true>;
+		CIterator(Node* node)
+			: m_node(node)
+		{
+		}
 	public:
+		using MyType = CIterator<IsConst>;
+		using value_type = std::conditional_t<IsConst, const std::string, std::string>;
+		using reference = value_type&;
+		using pointer = value_type*;
+		using difference_type = ptrdiff_t;
+		using iterator_category = std::random_access_iterator_tag;
 		CIterator() = default;
-		std::string& operator*() const;
-		CIterator& operator++();
-		CIterator& operator--();
 
-		bool operator!=(const CIterator& it) const;
-		bool operator==(const CIterator& it) const;
+		operator CIterator<false>()
+		{
+			return CIterator<false>(m_node);
+		}
+		bool operator==(const MyType& other) const
+		{
+			return this->m_node == other.m_node;
+		}
 
+		bool operator!=(const MyType& other) const
+		{
+			return this->m_node != other.m_node;
+		}
+		reference& operator*() const
+		{
+			if (!m_node->next || !m_node->prev)
+			{
+				throw std::runtime_error("Cannot get data from iterator");
+			}
+			return m_node->data;
+		}
+		MyType& operator++()
+		{
+			if (!m_node->next)
+			{
+				throw std::out_of_range("Trying increment iterator to out of range");
+			}
+			m_node = m_node->next.get();
+			return *this;
+		}
+		MyType& operator--()
+		{
+			if (!m_node->prev->prev)
+			{
+				throw std::out_of_range("Trying decrement iterator to out of range");
+			}
+			m_node = m_node->prev;
+			return *this;
+		}
+
+		MyType operator--(int)
+		{
+			if (!m_node->prev->prev)
+			{
+				throw std::out_of_range("Trying decrement iterator to out of range");
+			}
+			MyType& copy = *this;
+			--*this;
+			return copy;
+		}
+
+		MyType operator++(int)
+		{
+			if (!m_node->next)
+			{
+				throw std::out_of_range("Trying increment iterator to out of range");
+			}
+			MyType& copy = *this;
+			++*this;
+			return copy;
+		}
 	private:
-		Node* m_node = nullptr;
-		bool m_isReversed = false;		
+		Node* m_node = nullptr;	
 	};
 	CStringList();
 	CStringList(CStringList& list);
@@ -45,20 +110,26 @@ public:
 	CStringList operator=(CStringList& other);
 	CStringList operator=(CStringList&& other) noexcept;
 
-	CIterator begin();
-	CIterator end();
+	using iterator = CIterator<false>;
+	using const_iterator = CIterator<true>;
 
-	const CIterator cbegin()const;
-	const CIterator cend() const;
+	iterator begin();
+	iterator end();
 
-	CIterator rbegin();
-	CIterator rend();
+	const_iterator begin() const;
+	const_iterator end() const;
 
-	const CIterator crbegin() const;
-	const CIterator crend() const;
+	const_iterator cbegin() const;
+	const_iterator cend() const;
 
-	void Insert(const std::string& data, const CIterator& it);
-	void Erase(const CIterator& it);
+	std::reverse_iterator<iterator> rbegin();
+	std::reverse_iterator<iterator> rend();
+
+	std::reverse_iterator<const_iterator> crbegin() const;
+	std::reverse_iterator<const_iterator> crend() const;
+
+	void Insert(const std::string& data, const iterator& it);
+	void Erase(const iterator& it);
 
 	size_t GetSize() const;
 	void AppendBack(const std::string& data);

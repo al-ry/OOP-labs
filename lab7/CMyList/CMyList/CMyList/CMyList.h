@@ -27,6 +27,7 @@ public:
 		{
 			return CIterator<T, false>(m_node);
 		}
+
 		bool operator==(const MyType& other) const
 		{
 			return this->m_node == other.m_node;
@@ -62,6 +63,28 @@ public:
 			m_node = m_node->prev;
 			return *this;
 		}
+
+		MyType operator--(int)
+		{
+			if (!m_node->prev->prev)
+			{
+				throw std::out_of_range("Trying decrement iterator to out of range");
+			}
+			MyType& copy = *this;
+			--*this;
+			return copy;
+		}
+
+		MyType operator++(int)
+		{
+			if (!m_node->next)
+			{
+				throw std::out_of_range("Trying increment iterator to out of range");
+			}
+			MyType& copy = *this;
+			++*this;
+			return copy;
+		}
 	private:
 		Node<T>* m_node = nullptr;
 	};
@@ -73,10 +96,11 @@ public:
 
 	CMyList<T> operator=(const CMyList<T>& list);
 	CMyList<T> operator=(CMyList<T>&& list);
-	bool IsEmpty();
+	bool IsEmpty() const;
 	void AppendBack(const T& data);
 	void AppendFront(const T& data);
 	size_t GetSize() const;
+	void Clear();
 
 	using iterator = CIterator<T, false>;
 	using const_iterator = CIterator<T, true>;
@@ -176,10 +200,7 @@ inline CMyList<T>::CMyList()
 template <typename T>
 inline CMyList<T>::~CMyList()
 {
-	while (!IsEmpty())
-	{
-		Erase(begin());
-	}
+	Clear();
 	m_firstNode = nullptr;
 	m_lastNode = nullptr;
 }
@@ -190,6 +211,7 @@ inline CMyList<T> CMyList<T>::operator=(CMyList<T>&& list)
 {
 	if (std::addressof(list) != this)
 	{
+		Clear();
 		std::swap(m_firstNode, list.m_firstNode);
 		std::swap(m_lastNode, list.m_lastNode);
 		std::swap(m_size, list.m_size);
@@ -213,7 +235,7 @@ inline CMyList<T> CMyList<T>::operator=(const CMyList<T>& list)
 }
 
 template <typename T>
-inline bool CMyList<T>::IsEmpty()
+inline bool CMyList<T>::IsEmpty() const
 {
 	return m_size == 0u;
 }
@@ -234,6 +256,15 @@ template <typename T>
 inline size_t CMyList<T>::GetSize() const
 {
 	return m_size;
+}
+
+template <typename T>
+inline void CMyList<T>::Clear()
+{
+	while (!IsEmpty())
+	{
+		Erase(begin());
+	}
 }
 
 template <typename T>
