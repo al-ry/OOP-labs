@@ -115,22 +115,22 @@ void CHttpUrl::ParseUrl(std::string const& url)
 	m_document = SLASH + document;
 }
 
-Protocol CHttpUrl::GetProtocol(const std::string& protocol)
+Protocol CHttpUrl::GetProtocol(const std::string& protocol) const
 {
 	std::string lowerCaseProtocol = protocol;
 	std::transform(lowerCaseProtocol.begin(), lowerCaseProtocol.end(), lowerCaseProtocol.begin(), tolower);
 	if (lowerCaseProtocol == "http")
 	{
-		return m_protocol = Protocol::HTTP;
+		return Protocol::HTTP;
 	}
 	else if (lowerCaseProtocol == "https")
 	{
-		return m_protocol = Protocol::HTTPS;
+		return Protocol::HTTPS;
 	}
 	throw(CUrlParsingError("Invalid URL protocol"));
 }
 
-unsigned short CHttpUrl::GetPort(const std::string& portStr)
+unsigned short CHttpUrl::GetPort(const std::string& portStr) const
 {
 	int port;
 	if (!portStr.empty())
@@ -148,7 +148,7 @@ unsigned short CHttpUrl::GetPort(const std::string& portStr)
 	return GetDefaultPort(m_protocol);
 }
 
-std::string CHttpUrl::ComponeURL()
+std::string CHttpUrl::ComponeURL() const
 {
 	std::string strProtocol;
 	if (GetProtocol() == Protocol::HTTP)

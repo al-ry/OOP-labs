@@ -28,9 +28,9 @@ public:
 
 private:
 	void ParseUrl(std::string const& url);
-	Protocol GetProtocol(const std::string& protocol);
-	unsigned short GetPort(const std::string& portStr);	
-	std::string ComponeURL();
+	Protocol GetProtocol(const std::string& protocol) const;
+	unsigned short GetPort(const std::string& portStr) const;	
+	std::string ComponeURL() const;
 
 	static std::string GetDocument(std::string document);
 private:
