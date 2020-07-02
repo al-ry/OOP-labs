@@ -2,18 +2,36 @@
 #include "CMyString.h"
 
 
-void CMyString::CreateString()
+CMyString::iterator CMyString::begin()
 {
-	try
-	{
-		m_pChars = new char[m_length + 1];
-		m_pChars[m_length] = '\0';
-	}
-	catch (std::bad_alloc const & ba)
-	{
-		std::cout << "bad_alloc caught: " << ba.what() << '\n';
-	}
+	return iterator(m_pChars);
 }
+
+CMyString::iterator CMyString::end()
+{
+	return iterator(m_pChars + m_length);
+}
+
+CMyString::const_iterator CMyString::begin() const
+{
+	return const_iterator(m_pChars);
+}
+
+CMyString::const_iterator CMyString::end() const
+{
+	return const_iterator(m_pChars + m_length);
+}
+
+CMyString::const_iterator CMyString::cbegin() const
+{
+	return const_iterator(m_pChars);
+}
+
+CMyString::const_iterator CMyString::cend() const
+{
+	return const_iterator(m_pChars + m_length);
+}
+
 CMyString::CMyString()
 	: CMyString("", 0)
 {
@@ -27,7 +45,8 @@ CMyString::CMyString(const char* pString)
 CMyString::CMyString(const char* pString, size_t length)
 {
 	m_length = length;
-	CreateString();
+	m_pChars = new char[m_length + 1];
+	m_pChars[m_length] = '\0';
 	std::memcpy(m_pChars, pString, length);	
 }
 
@@ -40,7 +59,8 @@ CMyString::CMyString(CMyString&& other) noexcept
 	: m_pChars(other.m_pChars)
 	, m_length(other.m_length)
 {
-	other.m_pChars = nullptr;
+	other.m_pChars= new char[1];
+	other.m_pChars[0] = '\0';
 	other.m_length = 0;
 }
 
@@ -70,7 +90,7 @@ CMyString CMyString::SubString(size_t start, size_t length) const
 	{
 		throw std::out_of_range("Out of range");
 	}
-	if (length == SIZE_MAX || length >= m_length)
+	if (length >= m_length)
 	{
 		return CMyString(&m_pChars[start], m_length - start);
 	}
@@ -82,9 +102,9 @@ CMyString CMyString::SubString(size_t start, size_t length) const
 
 void CMyString::Clear()
 {
-	delete[] m_pChars;
-	m_length = 0;
-	CreateString();
+	CMyString tmp;
+	std::swap(m_pChars, tmp.m_pChars);
+	std::swap(m_length, tmp.m_length);
 }
 
 CMyString& CMyString::operator=(CMyString const& other)
@@ -105,7 +125,8 @@ CMyString& CMyString::operator=(CMyString&& other) noexcept
 		delete[] m_pChars;
 		m_pChars = other.m_pChars;
 		m_length = other.m_length;
-		other.m_pChars = nullptr;
+		other.m_pChars = new char[1];
+		other.m_pChars[0] = '\0';
 		other.m_length = 0;
 	}
 	return *this;
@@ -125,7 +146,7 @@ char& CMyString::operator[](size_t index)
 
 
 
-CMyString const operator+(const CMyString& lStr, const CMyString& rStr)
+CMyString operator+(const CMyString& lStr, const CMyString& rStr)
 {
 	size_t newLen = lStr.GetLength() + rStr.GetLength();
 	auto newStr = new char[newLen + 1];
@@ -134,7 +155,7 @@ CMyString const operator+(const CMyString& lStr, const CMyString& rStr)
 	std::memcpy(newStr, lStr.GetStringData(), lStr.GetLength());
 	std::memcpy(newStr + lStr.GetLength(), rStr.GetStringData(), rStr.GetLength());
 
-	CMyString newMyStr = CMyString(newStr, newLen);
+	CMyString newMyStr(newStr, newLen);
 	delete[] newStr;
 	return newMyStr;
 }
@@ -145,13 +166,13 @@ CMyString& CMyString::operator+=(const CMyString& rStr)
 	return *this;
 }
 
-CMyString const operator+(const char* lPStr, const CMyString& rStr)
+CMyString operator+(const char* lPStr, const CMyString& rStr)
 {
 	CMyString newStr = CMyString(lPStr) + rStr;
 	return newStr;
 }
 
-CMyString const operator+(const std::string& lStlStr, const CMyString& rStr)
+CMyString operator+(const std::string& lStlStr, const CMyString& rStr)
 {
 	CMyString newStr = CMyString(lStlStr) + rStr;
 	return newStr;
@@ -170,8 +191,9 @@ bool operator!=(const CMyString& lCmpStr, const CMyString& rCmpStr)
 
 bool operator<(const CMyString& lCmpStr, const CMyString& rCmpStr)
 {
-	int cmpRes = std::memcmp(lCmpStr.GetStringData(), rCmpStr.GetStringData(), lCmpStr.GetLength());
-	if (cmpRes == 0 || cmpRes > 0)
+	size_t minLength = std::min(lCmpStr.GetLength(), rCmpStr.GetLength());
+	int cmpRes = std::memcmp(lCmpStr.GetStringData(), rCmpStr.GetStringData(), minLength);
+	if (cmpRes >= 0)
 	{
 		return false;
 	}
@@ -186,8 +208,9 @@ bool operator>=(const CMyString& lCmpStr, const CMyString& rCmpStr)
 
 bool operator>(const CMyString& lCmpStr, const CMyString& rCmpStr)
 {
-	int cmpRes = std::memcmp(lCmpStr.GetStringData(), rCmpStr.GetStringData(), lCmpStr.GetLength());
-	if (cmpRes == 0 || cmpRes < 0)
+	size_t minLength = std::min(lCmpStr.GetLength(), rCmpStr.GetLength());
+	int cmpRes = std::memcmp(lCmpStr.GetStringData(), rCmpStr.GetStringData(), minLength);
+	if (cmpRes <= 0)
 	{
 		return false;
 	}
@@ -201,15 +224,19 @@ bool operator<=(const CMyString& lCmpStr, const CMyString& rCmpStr)
 
 std::ostream& operator<<(std::ostream& stream, CMyString const& str)
 {
-	stream << str.GetStringData();
+	for (size_t i = 0; i < str.GetLength(); i++)
+	{
+		stream << str[i];
+	}
 	return stream;
 }
 
 std::istream& operator>>(std::istream& stream, CMyString& str)
 {
-	char charsBuffer[255];
-	stream.getline(charsBuffer, sizeof(charsBuffer));
-	str = charsBuffer;
+	std::string tStr;
+	stream >> tStr;
+	str = CMyString(tStr);
+
 	return stream;
 }
 

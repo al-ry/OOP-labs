@@ -4,3 +4,4 @@
 #include <stdexcept>
 #include <iostream>
 #include <cassert>
+#include <algorithm>

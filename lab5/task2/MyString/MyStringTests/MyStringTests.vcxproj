@@ -154,6 +154,7 @@
     <ClCompile Include="CMyStringTests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="StringIteratorTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\MyString\CMyString.h" />

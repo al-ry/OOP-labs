@@ -219,6 +219,7 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operators, some_strings_for_test_overlo
 		BOOST_AUTO_TEST_CASE(can_not_be_equal_with_CMyString)
 		{
 			BOOST_CHECK(str1 != str2);
+			BOOST_CHECK(!(str1 != "str1"));
 		}
 		BOOST_AUTO_TEST_CASE(cant_be_equal_with_pointer_to_const_char)
 		{
@@ -235,6 +236,12 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operators, some_strings_for_test_overlo
 		BOOST_AUTO_TEST_CASE(can_compare_with_CMyString)
 		{
 			BOOST_CHECK(str1 < str2);
+		}
+		BOOST_AUTO_TEST_CASE(when_left_sequence_greater_then_right_should_take_lesser_string_for_comparing)
+		{
+			CMyString longStr("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+			CMyString smallStr("z");
+			BOOST_CHECK(!(smallStr < longStr));
 		}
 		BOOST_AUTO_TEST_CASE(when_first_greater_than_another_should_return_false)
 		{
@@ -301,9 +308,14 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operators, some_strings_for_test_overlo
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE(Test_compare_bool_operator_lesser_than_or_equal)
+		BOOST_AUTO_TEST_CASE(when_left_greater_then_right_should_return_false)
+		{
+			BOOST_CHECK(!(str2 <= str1));
+		}
 		BOOST_AUTO_TEST_CASE(can_compare_with_CMyString)
 		{
 			BOOST_CHECK(str1 <= str2);
+			BOOST_CHECK(!(str2 <= str1));
 		}
 		BOOST_AUTO_TEST_CASE(when_both_str_are_equal_should_return_true)
 		{
@@ -336,6 +348,11 @@ BOOST_FIXTURE_TEST_SUITE(Test_overloaded_operators, some_strings_for_test_overlo
 		{
 			str1[3] = '0';
 			VerifyString(str1, "str0", 4);
+		}
+		BOOST_AUTO_TEST_CASE(can_recieve_cartain_element_from_const_string)
+		{
+			const CMyString str = "new str";
+			BOOST_CHECK(str[3] == ' ');
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
