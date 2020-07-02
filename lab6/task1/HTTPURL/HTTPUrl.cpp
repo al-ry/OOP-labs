@@ -119,11 +119,11 @@ Protocol CHttpUrl::GetProtocol(const std::string& protocol)
 {
 	std::string lowerCaseProtocol = protocol;
 	std::transform(lowerCaseProtocol.begin(), lowerCaseProtocol.end(), lowerCaseProtocol.begin(), tolower);
-	if (protocol == "http")
+	if (lowerCaseProtocol == "http")
 	{
 		return m_protocol = Protocol::HTTP;
 	}
-	else if (protocol == "https")
+	else if (lowerCaseProtocol == "https")
 	{
 		return m_protocol = Protocol::HTTPS;
 	}
