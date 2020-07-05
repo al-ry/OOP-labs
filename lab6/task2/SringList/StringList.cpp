@@ -192,7 +192,7 @@ void CStringList::Erase(const iterator& it)
 	}
 	if (it == end())
 	{
-		throw std::out_of_range("Cannot be erased from end() and rend() position");
+		throw std::out_of_range("Cannot be erased from end() position");
 	}
 	it.m_node->next->prev = it.m_node->prev;
 	it.m_node->prev->next = std::move(it.m_node->next);
