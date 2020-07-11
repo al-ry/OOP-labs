@@ -80,6 +80,14 @@ BOOST_FIXTURE_TEST_SUITE(Int_list, EmptyIntList)
 		{
 			BOOST_CHECK_EQUAL(list.GetSize(), 5u);
 		}
+		BOOST_AUTO_TEST_CASE(can_recieve_back_element)
+		{
+			BOOST_CHECK_EQUAL(list.GetBackElement(), 5u);
+		}
+		BOOST_AUTO_TEST_CASE(can_recieve_front_element)
+		{
+			BOOST_CHECK_EQUAL(list.GetFrontElement(), 1u);
+		}
 		BOOST_AUTO_TEST_CASE(can_get_begin_and_cbegin_iterator)
 		{
 			auto it = list.begin();

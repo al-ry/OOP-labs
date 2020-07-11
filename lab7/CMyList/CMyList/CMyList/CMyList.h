@@ -102,6 +102,11 @@ public:
 	size_t GetSize() const noexcept;
 	void Clear();
 
+	T& GetBackElement() const;
+	T& GetFrontElement() const;
+	T const& GetBackElement();
+	T const& GetFrontElement();
+
 	using iterator = CIterator<T, false>;
 	using const_iterator = CIterator<T, true>;
 
@@ -266,6 +271,47 @@ inline void CMyList<T>::Clear()
 		Erase(begin());
 	}
 }
+
+template <typename T>
+inline T& CMyList<T>::GetBackElement() const
+{
+	if (IsEmpty())
+	{
+		throw std::runtime_error("Cannot get back element from empty list");
+	}
+	return m_lastNode->prev->data.value();
+}
+
+template <typename T>
+inline T& CMyList<T>::GetFrontElement() const
+{
+	if (IsEmpty())
+	{
+		throw std::runtime_error("Cannot get back element from empty list");
+	}
+	return m_firstNode->next->data.value();
+}
+
+template <typename T>
+inline T const& CMyList<T>::GetBackElement()
+{
+	if (IsEmpty())
+	{
+		throw std::runtime_error("Cannot get back element from empty list");
+	}
+	return m_lastNode->prev->data.value();
+}
+
+template <typename T>
+inline T const& CMyList<T>::GetFrontElement()
+{
+	if (IsEmpty())
+	{
+		throw std::runtime_error("Cannot get back element from empty list");
+	}
+	return m_firstNode->next->data.value();
+}
+
 
 template <typename T>
 inline void CMyList<T>::Insert(const T& data, const iterator& it)
