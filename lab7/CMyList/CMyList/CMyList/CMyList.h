@@ -90,16 +90,16 @@ public:
 	};
 
 	CMyList(const CMyList& list);
-	CMyList(CMyList&& list)noexcept;
+	CMyList(CMyList&& list);
 	CMyList();
 	~CMyList();
 
 	CMyList<T> operator=(const CMyList<T>& list);
 	CMyList<T> operator=(CMyList<T>&& list);
-	bool IsEmpty() const;
+	bool IsEmpty() const noexcept;
 	void AppendBack(const T& data);
 	void AppendFront(const T& data);
-	size_t GetSize() const;
+	size_t GetSize() const noexcept;
 	void Clear();
 
 	using iterator = CIterator<T, false>;
@@ -178,7 +178,7 @@ inline CMyList<T>::CMyList(const CMyList& list)
 }
 
 template <typename T>
-inline CMyList<T>::CMyList(CMyList&& list)noexcept
+inline CMyList<T>::CMyList(CMyList&& list)
 {
 	std::swap(m_firstNode, list.m_firstNode);
 	std::swap(m_lastNode, list.m_lastNode);
@@ -235,7 +235,7 @@ inline CMyList<T> CMyList<T>::operator=(const CMyList<T>& list)
 }
 
 template <typename T>
-inline bool CMyList<T>::IsEmpty() const
+inline bool CMyList<T>::IsEmpty() const noexcept
 {
 	return m_size == 0u;
 }
@@ -253,7 +253,7 @@ inline void CMyList<T>::AppendFront(const T& data)
 }
 
 template <typename T>
-inline size_t CMyList<T>::GetSize() const
+inline size_t CMyList<T>::GetSize() const noexcept
 {
 	return m_size;
 }
