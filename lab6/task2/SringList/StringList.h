@@ -59,6 +59,14 @@ public:
 			}
 			return m_node->data;
 		}
+		pointer operator->() const
+		{
+			if (!m_node->next || !m_node->prev)
+			{
+				throw std::logic_error("can not take pointer of end or rend iterator");
+			}
+			return &m_node->data;
+		}
 		MyType& operator++()
 		{
 			if (!m_node->next)
@@ -84,7 +92,7 @@ public:
 			{
 				throw std::out_of_range("Trying decrement iterator to out of range");
 			}
-			MyType& copy = *this;
+			auto copy = *this;
 			--*this;
 			return copy;
 		}
@@ -95,7 +103,7 @@ public:
 			{
 				throw std::out_of_range("Trying increment iterator to out of range");
 			}
-			MyType& copy = *this;
+			auto copy = *this;
 			++*this;
 			return copy;
 		}
@@ -138,10 +146,10 @@ public:
 	void Clear();
 	bool IsEmpty() const;
 
-	std::string& GetBackElement() const;
-	std::string const& GetBackElement();
-	std::string& GetFrontElement() const;
-	std::string const& GetFrontElement();
+	std::string& GetBackElement();
+	std::string const& GetBackElement() const;
+	std::string& GetFrontElement();
+	std::string const& GetFrontElement() const;
 
 private:
 	size_t m_size = 0;

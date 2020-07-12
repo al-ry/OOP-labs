@@ -17,10 +17,11 @@ CStringList::CStringList(CStringList& list)
 }
 
 CStringList::CStringList(CStringList&& list) noexcept
-	: m_size(list.m_size)
-	, m_firstNode(std::move(list.m_firstNode))
-	, m_lastNode(list.m_lastNode)
 {
+	Clear();
+	m_size = list.m_size;
+	m_firstNode =  std::move(list.m_firstNode);
+	m_lastNode = list.m_lastNode;
 	CStringList tmpList;
 	list.m_firstNode = std::move(tmpList.m_firstNode);
 	list.m_lastNode = tmpList.m_lastNode;
@@ -30,14 +31,13 @@ CStringList::CStringList(CStringList&& list) noexcept
 CStringList::~CStringList()
 {
 	Clear();
-	m_firstNode = nullptr;
-	m_lastNode = nullptr;
 }
 
 CStringList CStringList::operator=(CStringList& other)
 {
 	if (&other != this)
 	{
+		Clear();
 		CStringList copyOfList(other);
 		this->m_size = copyOfList.GetSize();
 		this->m_firstNode = std::move(copyOfList.m_firstNode);
@@ -51,13 +51,10 @@ CStringList CStringList::operator=(CStringList&& other) noexcept
 	if (&other != this)
 	{
 		Clear();
-		this->m_size = other.GetSize();
-		this->m_firstNode = std::move(other.m_firstNode);
-		this->m_lastNode = other.m_lastNode;
-		CStringList tmpList;
-		other.m_firstNode = std::move(tmpList.m_firstNode);
-		other.m_lastNode = tmpList.m_lastNode;
-		other.m_size = tmpList.m_size;
+		std::swap(m_firstNode, other.m_firstNode);
+		std::swap(m_lastNode, other.m_lastNode);
+		std::swap(m_size, other.m_size);
+		other.Clear();
 	}
 	return *this;
 }
@@ -90,16 +87,7 @@ bool CStringList::IsEmpty() const
 	return (m_size == 0u);
 }
 
-std::string& CStringList::GetBackElement() const
-{
-	if (IsEmpty())
-	{
-		throw std::runtime_error("Can't get back element from empty list");
-	}
-	return m_lastNode->next->data;
-}
-
-std::string const& CStringList::GetBackElement()
+std::string& CStringList::GetBackElement()
 {
 	if (IsEmpty())
 	{
@@ -108,7 +96,16 @@ std::string const& CStringList::GetBackElement()
 	return m_lastNode->prev->data;
 }
 
-std::string& CStringList::GetFrontElement() const
+std::string const& CStringList::GetBackElement() const
+{
+	if (IsEmpty())
+	{
+		throw std::runtime_error("Can't get back element from empty list");
+	}
+	return m_lastNode->prev->data;
+}
+
+std::string& CStringList::GetFrontElement()
 {
 	if (IsEmpty())
 	{
@@ -117,7 +114,7 @@ std::string& CStringList::GetFrontElement() const
 	return m_firstNode->next->data;
 }
 
-std::string const& CStringList::GetFrontElement()
+std::string const& CStringList::GetFrontElement() const
 {
 	if (IsEmpty())
 	{

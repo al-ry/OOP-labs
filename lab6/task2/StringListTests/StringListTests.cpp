@@ -43,9 +43,11 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 		BOOST_AUTO_TEST_CASE(makes_it_accessible_via_GetBackElement_method)
 		{
 			list.AppendBack("hello");
-			BOOST_CHECK_EQUAL(list.GetBackElement(), "hello");
+			auto res = list.GetBackElement();
+			BOOST_CHECK(res == "hello");
 			list.AppendBack("goodbye");
-			BOOST_CHECK_EQUAL(list.GetBackElement(), "goodbye");
+			res = list.GetBackElement();
+			BOOST_CHECK_EQUAL(res, "goodbye");
 		}
 		BOOST_AUTO_TEST_CASE(makes_it_accessible_via_GetBackElement_const_method)
 		{
@@ -121,8 +123,13 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 				auto it = list.begin();
 				BOOST_CHECK_EQUAL(*++it, "2");
 				BOOST_CHECK_EQUAL(*++it, "3");
-				BOOST_CHECK_EQUAL(*it++, "4");
-				BOOST_CHECK_EQUAL(*it++, "5");	
+				BOOST_CHECK_EQUAL(*it++, "3");
+				BOOST_CHECK_EQUAL(*it++, "4");	
+			}
+			BOOST_AUTO_TEST_CASE(can_get_pointer_to_data)
+			{
+				auto it = list.begin();
+				BOOST_CHECK_EQUAL(it->length(), 1);
 			}
 			BOOST_AUTO_TEST_CASE(cannot_get_iterator_when_its_increased_to_out_of_range)
 			{
@@ -134,7 +141,7 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 			{
 				auto end = list.end();
 				BOOST_CHECK(*--end == "5");
-				BOOST_CHECK_EQUAL(*end--, "4");
+				BOOST_CHECK_EQUAL(*end--, "5");
 			}
 			BOOST_AUTO_TEST_CASE(cant_deacrease_rbegin_iterator)
 			{
