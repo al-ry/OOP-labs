@@ -45,6 +45,14 @@ public:
 			}
 			return *m_node->data;
 		}
+		pointer operator->() const
+		{
+			if (!m_node->next || !m_node->prev)
+			{
+				throw std::logic_error("can not take pointer of end or rend iterator");
+			}
+			return &m_node->data.value();
+		}
 		MyType& operator++()
 		{
 			if (!m_node->next)
@@ -70,7 +78,7 @@ public:
 			{
 				throw std::out_of_range("Trying decrement iterator to out of range");
 			}
-			MyType& copy = *this;
+			MyType copy = *this;
 			--*this;
 			return copy;
 		}
@@ -81,7 +89,7 @@ public:
 			{
 				throw std::out_of_range("Trying increment iterator to out of range");
 			}
-			MyType& copy = *this;
+			MyType copy = *this;
 			++*this;
 			return copy;
 		}
@@ -102,10 +110,10 @@ public:
 	size_t GetSize() const noexcept;
 	void Clear();
 
-	T& GetBackElement() const;
-	T& GetFrontElement() const;
-	T const& GetBackElement();
-	T const& GetFrontElement();
+	T& GetBackElement();
+	T& GetFrontElement();
+	T const& GetBackElement() const;
+	T const& GetFrontElement() const;
 
 	using iterator = CIterator<T, false>;
 	using const_iterator = CIterator<T, true>;
@@ -176,7 +184,7 @@ template <typename T>
 inline CMyList<T>::CMyList(const CMyList& list)
 	: CMyList()
 {
-	for (auto elem : list)
+	for (auto &elem : list)
 	{
 		AppendBack(elem);
 	}
@@ -206,8 +214,6 @@ template <typename T>
 inline CMyList<T>::~CMyList()
 {
 	Clear();
-	m_firstNode = nullptr;
-	m_lastNode = nullptr;
 }
 
 
@@ -220,10 +226,7 @@ inline CMyList<T> CMyList<T>::operator=(CMyList<T>&& list)
 		std::swap(m_firstNode, list.m_firstNode);
 		std::swap(m_lastNode, list.m_lastNode);
 		std::swap(m_size, list.m_size);
-		CMyList tmpList;
-		list.m_firstNode = std::move(tmpList.m_firstNode);
-		list.m_lastNode = tmpList.m_lastNode;
-		list.m_size = 0;
+		list.Clear();
 	}
 	return *this;
 }
@@ -234,7 +237,9 @@ inline CMyList<T> CMyList<T>::operator=(const CMyList<T>& list)
 	if (std::addressof(list) != this)
 	{
 		CMyList<T> tempList(list);
-		std::swap(tempList, *this);
+		this->m_size = tempList.GetSize();
+		this->m_firstNode = std::move(tempList.m_firstNode);
+		this->m_lastNode = tempList.m_lastNode;
 	}
 	return *this;
 }
@@ -273,7 +278,7 @@ inline void CMyList<T>::Clear()
 }
 
 template <typename T>
-inline T& CMyList<T>::GetBackElement() const
+inline T& CMyList<T>::GetBackElement()
 {
 	if (IsEmpty())
 	{
@@ -283,7 +288,7 @@ inline T& CMyList<T>::GetBackElement() const
 }
 
 template <typename T>
-inline T& CMyList<T>::GetFrontElement() const
+inline T& CMyList<T>::GetFrontElement()
 {
 	if (IsEmpty())
 	{
@@ -293,7 +298,7 @@ inline T& CMyList<T>::GetFrontElement() const
 }
 
 template <typename T>
-inline T const& CMyList<T>::GetBackElement()
+inline T const& CMyList<T>::GetBackElement() const
 {
 	if (IsEmpty())
 	{
@@ -303,7 +308,7 @@ inline T const& CMyList<T>::GetBackElement()
 }
 
 template <typename T>
-inline T const& CMyList<T>::GetFrontElement()
+inline T const& CMyList<T>::GetFrontElement() const
 {
 	if (IsEmpty())
 	{

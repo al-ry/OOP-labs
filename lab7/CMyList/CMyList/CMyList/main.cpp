@@ -10,6 +10,8 @@ int main()
 	list.AppendBack(4);
 	list.AppendBack(5);
 
+	auto it = list.begin();
+	
 	for (auto it = list.rbegin(); it != list.rend(); it++)
 	{
 		std::cout << *it;

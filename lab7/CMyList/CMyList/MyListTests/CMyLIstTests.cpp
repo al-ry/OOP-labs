@@ -107,7 +107,7 @@ BOOST_FIXTURE_TEST_SUITE(Int_list, EmptyIntList)
 			auto it = list.begin();
 			BOOST_CHECK_EQUAL(*++it, 2);
 			BOOST_CHECK_EQUAL(*++(++it), 4);
-			BOOST_CHECK_EQUAL(*it++, 5);
+			BOOST_CHECK_EQUAL(*it++, 4);
 		}
 		BOOST_AUTO_TEST_CASE(cannot_increment_end_iterator_to_out_of_range)
 		{
@@ -120,7 +120,7 @@ BOOST_FIXTURE_TEST_SUITE(Int_list, EmptyIntList)
 			auto it = list.end();
 			BOOST_CHECK_EQUAL(*--it, 5);
 			BOOST_CHECK_EQUAL(*--(--it), 3);
-			BOOST_CHECK_EQUAL(*it--, 2);
+			BOOST_CHECK_EQUAL(*it--, 3);
 		}
 		BOOST_AUTO_TEST_CASE(cannot_decrement_begin_iterator_to_out_of_range)
 		{
@@ -273,6 +273,10 @@ BOOST_FIXTURE_TEST_SUITE(String_list, EmptyStringList)
 		BOOST_AUTO_TEST_CASE(has_size)
 		{
 			BOOST_CHECK(list.GetSize() == 5u);
+		}
+		BOOST_AUTO_TEST_CASE(can_get_pointer_to_data)
+		{
+			BOOST_CHECK(list.begin()->length() == 1);
 		}
 		BOOST_AUTO_TEST_CASE(can_get_elements_via_itarators)
 		{
