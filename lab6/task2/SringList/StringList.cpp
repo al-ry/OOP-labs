@@ -50,6 +50,7 @@ CStringList CStringList::operator=(CStringList&& other) noexcept
 {
 	if (&other != this)
 	{
+		Clear(); 
 		std::swap(m_firstNode, other.m_firstNode);
 		std::swap(m_lastNode, other.m_lastNode);
 		std::swap(m_size, other.m_size); 

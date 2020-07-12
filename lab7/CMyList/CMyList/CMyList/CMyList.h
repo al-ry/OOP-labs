@@ -193,9 +193,10 @@ inline CMyList<T>::CMyList(const CMyList& list)
 template <typename T>
 inline CMyList<T>::CMyList(CMyList&& list)
 {
-	std::swap(m_firstNode, list.m_firstNode);
-	std::swap(m_lastNode, list.m_lastNode);
-	std::swap(m_size, list.m_size);
+	Clear();
+	m_size = list.m_size;
+	m_firstNode = std::move(list.m_firstNode);
+	m_lastNode = list.m_lastNode;
 	CMyList tmpList;
 	list.m_firstNode = std::move(tmpList.m_firstNode);
 	list.m_lastNode = tmpList.m_lastNode;
@@ -222,7 +223,7 @@ inline CMyList<T> CMyList<T>::operator=(CMyList<T>&& list)
 {
 	if (std::addressof(list) != this)
 	{
-		Clear();
+		Clear(); 
 		std::swap(m_firstNode, list.m_firstNode);
 		std::swap(m_lastNode, list.m_lastNode);
 		std::swap(m_size, list.m_size);
