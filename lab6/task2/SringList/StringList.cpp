@@ -16,7 +16,7 @@ CStringList::CStringList(CStringList& list)
 	}
 }
 
-CStringList::CStringList(CStringList&& list) noexcept
+CStringList::CStringList(CStringList&& list)
 {
 	Clear();
 	m_size = list.m_size;
@@ -50,10 +50,9 @@ CStringList CStringList::operator=(CStringList&& other) noexcept
 {
 	if (&other != this)
 	{
-		Clear();
 		std::swap(m_firstNode, other.m_firstNode);
 		std::swap(m_lastNode, other.m_lastNode);
-		std::swap(m_size, other.m_size);
+		std::swap(m_size, other.m_size); 
 		other.Clear();
 	}
 	return *this;

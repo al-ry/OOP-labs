@@ -15,6 +15,8 @@ int main()
 	list.AppendFront("7");
 	list.AppendFront("8");
 
+	CStringList list2(std::move(list));
+
 	for (auto it = list.rbegin(); it !=
 		list.rend(); ++it)
 	{

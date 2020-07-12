@@ -112,7 +112,7 @@ public:
 	};
 	CStringList();
 	CStringList(CStringList& list);
-	CStringList(CStringList&& list) noexcept;
+	CStringList(CStringList&& list);
 	~CStringList();
 
 	CStringList operator=(CStringList& other);
