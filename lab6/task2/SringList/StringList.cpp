@@ -46,7 +46,7 @@ CStringList CStringList::operator=(CStringList& other)
 	return *this;
 }
 
-CStringList CStringList::operator=(CStringList&& other) noexcept
+CStringList CStringList::operator=(CStringList&& other)
 {
 	if (&other != this)
 	{

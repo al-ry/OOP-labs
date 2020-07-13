@@ -116,7 +116,7 @@ public:
 	~CStringList();
 
 	CStringList operator=(CStringList& other);
-	CStringList operator=(CStringList&& other) noexcept;
+	CStringList operator=(CStringList&& other);
 
 	using iterator = CIterator<false>;
 	using const_iterator = CIterator<true>;
