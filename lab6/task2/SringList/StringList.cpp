@@ -35,9 +35,9 @@ CStringList CStringList::operator=(CStringList& other)
 	{
 		Clear();
 		CStringList copyOfList(other);
-		this->m_size = copyOfList.GetSize();
-		this->m_firstNode = std::move(copyOfList.m_firstNode);
-		this->m_lastNode = copyOfList.m_lastNode;
+		std::swap(m_firstNode, copyOfList.m_firstNode);
+		std::swap(m_lastNode, copyOfList.m_lastNode);
+		std::swap(m_size, copyOfList.m_size);
 	}
 	return *this;
 }
