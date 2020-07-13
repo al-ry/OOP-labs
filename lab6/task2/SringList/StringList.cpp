@@ -19,13 +19,9 @@ CStringList::CStringList(CStringList& list)
 CStringList::CStringList(CStringList&& list)
 {
 	Clear();
-	m_size = list.m_size;
-	m_firstNode =  std::move(list.m_firstNode);
-	m_lastNode = list.m_lastNode;
-	CStringList tmpList;
-	list.m_firstNode = std::move(tmpList.m_firstNode);
-	list.m_lastNode = tmpList.m_lastNode;
-	list.m_size = tmpList.m_size;
+	std::swap(m_firstNode, list.m_firstNode);
+	std::swap(m_lastNode, list.m_lastNode);
+	std::swap(m_size, list.m_size);
 }
 
 CStringList::~CStringList()
@@ -54,7 +50,6 @@ CStringList CStringList::operator=(CStringList&& other)
 		std::swap(m_firstNode, other.m_firstNode);
 		std::swap(m_lastNode, other.m_lastNode);
 		std::swap(m_size, other.m_size); 
-		other.Clear();
 	}
 	return *this;
 }
